@@ -76,15 +76,18 @@ border: 1px solid #baaeab;
 <style>
 #base {
 position: absolute;
-	left: 30%;
-	top: 5%;
 overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;
  }
 
-@media only screen and (max-width: 730px) {
-#base { left: 5%; top: 5%; }}
+@media screen and (min-width: 1000px){
+#base { left:30%; top: 5%; }
+}
+
+@media screen and (max-width: 1000px){
+#base { zoom: 200%; left:5%; top: 5%; }
+}
 
 #text {
 position: absolute;
