@@ -71,6 +71,10 @@ border: 1px solid #baaeab;
 }
 </style>
 <style>
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
 #base {
 position: absolute;
 	left: 190px;
@@ -92,7 +96,7 @@ z-index: 3;
 #mtext {
 position: absolute;
 	left: 120px;
-	top: 290px;
+	top: 305px;
 width: 200px;
 height: 220px;
 overflow-x:hidden;
@@ -103,14 +107,14 @@ line-height: 250%;
 #shy {
 position: absolute;
 	left: 120px;
-	top: 250px;
+	top: 255px;
 width: 200px;
 height: 50px;
 overflow-x:hidden;
 z-index: 4;
  }
 
-#text {
+#aaa {
 position: absolute;
 	left: 420px;
 	top: 200px;
@@ -120,12 +124,19 @@ overflow-x:hidden;
 z-index: 5;
  }
 
+#text {
+position: absolute;
+height: 305px;
+overflow-x:hidden;
+z-index: 5;
+ }
+
 #hi {
 position: absolute;
 	left: 580px;
 	top: 150px;
-width: 260px;
-height: 50px;
+width: 265px;
+height: 60px;
 overflow-x:hidden;
 line-height:25px;
 z-index: 4;
@@ -140,12 +151,28 @@ height: 80px;
 overflow-x:hidden;
 z-index: 4;
  }
+
+@media screen and (max-width: 1000px) and (orientation: portrait){
+#everything { position: absolute; zoom: 135%;
+	left:660px;
+	top:-50px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg); }
+#text { overflow: auto; overflow: scroll; }
+}
+@media screen and (max-width: 1000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 100%; left:-5px; top:-5px;}
+#text { overflow: auto; overflow: scroll; }
+}
 </style>
 </head>
 
 <body style="background-image:url(https://i.imgur.com/vKPOMgC.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px;">
 <body ondragstart="return false">
-
+<div id="everything">
 <br><br><br><br><br>
 
 <div id="menu">
@@ -167,9 +194,7 @@ z-index: 4;
 <br>
 　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/felted" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">needle felt critters</font></a>
 <br>
-　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/sewn" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">accessories & clothing</font></a>
-<br>
-　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/embroidered" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">embroidered items</font></a>
+　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/stationery" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">stationery goods</font></a>
 </font>
 
 </div>
@@ -178,6 +203,7 @@ z-index: 4;
 <img src="https://i.imgur.com/yCcJZ9B.png">
 </div>
 
+<div id="aaa">
 <div id="text">
 <div style="width: 600px;">
 <font color="#a3867f">
@@ -199,14 +225,14 @@ z-index: 4;
 <font color="#a3867f">
 <sub><sub><img src="https://i.imgur.com/CQsoZBq.gif"></sub></sub>　shipping info :
 <br><br>
-　<font color="#e8aca2">♡</font><font color="#a89292">　the price depends on the size of the item, how many items you want to buy at once and where you live. if you buy a few small items i can send you by letter ( the most recommended option ) ;
+　<font color="#e8aca2">♡</font><font color="#a89292">　the price depends on the size of the item and how many items you want to buy at once. the most recommended option is to buy only enough items to fill the standard small package ;
 </font>
 <br><br>
-　<font color="#e8aca2">♡</font><font color="#a89292">　usually the letter shipping price is $5 dollars ( $10 reais ). the big packaging shipping is sadly quite expensive because i live in brazil.. it's usually $30 dollars ( if you live in brazil it will be $20 reais ) ;
+　<font color="#e8aca2">♡</font><font color="#a89292">　the worldwide shipping price for the standard package is $5 dollars ( $20 reais ). if you buy a lot of items at once the package will be bigger, and the shipping is sadly quite expensive since i live in brazil.. it's around $25 dollars. most of the time it's not worth the price ;
 <br><br>
-　<font color="#e8aca2">♡</font><font color="#a89292">　if you live in brazil it will take ~1 week to arrive, but if you live in any other place it usually takes ~1 month. sometimes it can take more time, but don't worry, it always arrive at some point !!
+　<font color="#e8aca2">♡</font><font color="#a89292">　it usually takes 2~3 weeks for packages to arrive anywhere in the world. if it's taking way too long ( like 3 months ) please contact me, because it's probably a problem with the address. in this case the package returns to me and will have to be resent ;
 <br><br>
-　<font color="#e8aca2">♡</font><font color="#a89292">　it never happened before, but if it takes too long and never arrive ( like 3 months ;; ) please contact me and i will surely give your money back + write a letter to say i'm sorry.. it would make me really sad so i hope it never happens.
+　<font color="#e8aca2">♡</font><font color="#a89292">　i only give refunds within the time that the product has not yet been packaged for shipping, for obvious reasons .. so if you are asking for a refund please be quick !!
 </font>
 <br><br><br>
 
@@ -214,15 +240,15 @@ z-index: 4;
 <font color="#a3867f">
 <sub><sub><img src="https://i.imgur.com/CQsoZBq.gif"></sub></sub>　payment methods :
 <br><br>
-　<font color="#e8aca2">♡</font><font color="#a89292">　if you live outside brazil payment must be made through paypal ( middlepot@gmail.com )</font>
+　<font color="#e8aca2">♡</font><font color="#a89292">　payments must be made through paypal ( middlepot@gmail.com )</font>
 </font>
 <br><br>
-　<font color="#e8aca2">♡</font><font color="#a89292">　if you live in brazil you can pay me by bank deposit ( caixa econômica ) or <a href="https://picpay.me/middlepot" target="_blank" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">picpay</font></a></font>
+　<font color="#e8aca2">♡</font><font color="#a89292">　if you live in brazil you can also pay me through pix ( middlepot@gmail.com ) or <a href="https://picpay.me/middlepot" target="_blank" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">picpay</font></a></font>
 <br><br>
 </font>
 </div>
 
-</div>
+</div></div>
 
 <div id="hi">
 <center>
@@ -244,7 +270,7 @@ z-index: 4;
 
 <br><br><br>
 
-
+</div>
 </body>
 </body>
 
