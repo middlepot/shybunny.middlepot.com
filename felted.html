@@ -71,6 +71,10 @@ border: 1px solid #baaeab;
 }
 </style>
 <style>
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
 #base {
 position: absolute;
 	left: 190px;
@@ -92,7 +96,7 @@ z-index: 3;
 #mtext {
 position: absolute;
 	left: 120px;
-	top: 290px;
+	top: 305px;
 width: 200px;
 height: 220px;
 overflow-x:hidden;
@@ -103,14 +107,14 @@ line-height: 250%;
 #shy {
 position: absolute;
 	left: 120px;
-	top: 250px;
+	top: 255px;
 width: 200px;
 height: 50px;
 overflow-x:hidden;
 z-index: 4;
  }
 
-#text {
+#aaa {
 position: absolute;
 	left: 420px;
 	top: 200px;
@@ -120,12 +124,19 @@ overflow-x:hidden;
 z-index: 5;
  }
 
+#text {
+position: absolute;
+height: 305px;
+overflow-x:hidden;
+z-index: 5;
+ }
+
 #hi {
 position: absolute;
 	left: 580px;
 	top: 150px;
-width: 260px;
-height: 50px;
+width: 265px;
+height: 60px;
 overflow-x:hidden;
 line-height:25px;
 z-index: 4;
@@ -140,12 +151,28 @@ height: 80px;
 overflow-x:hidden;
 z-index: 4;
  }
+
+@media screen and (max-width: 1000px) and (orientation: portrait){
+#everything { position: absolute; zoom: 135%;
+	left:660px;
+	top:-50px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg); }
+#text { overflow: auto; overflow: scroll; }
+}
+@media screen and (max-width: 1000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 100%; left:-5px; top:-5px;}
+#text { overflow: auto; overflow: scroll; }
+}
 </style>
 </head>
 
 <body style="background-image:url(https://i.imgur.com/vKPOMgC.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px;">
 <body ondragstart="return false">
-
+<div id="everything">
 <br><br><br><br><br>
 
 <div id="menu">
@@ -167,9 +194,7 @@ z-index: 4;
 <br>
 　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/felted" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">needle felt critters</font></a>
 <br>
-　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/sewn" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">accessories & clothing</font></a>
-<br>
-　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/embroidered" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">embroidered items</font></a>
+　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/stationery" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">stationery goods</font></a>
 </font>
 
 </div>
@@ -179,19 +204,20 @@ z-index: 4;
 </div>
 
 
+<div id="aaa">
 <div id="text">
 <div style="width: 600px; padding-left:10px;">
 <font color="#a89292"><br>
-　the art of needle felting is a very delicate process that just use natural wool, a special needle and lots of love & patience ..<br>
-　i'm happy to spread this sweet art and make more people know the extremely soft, delicate, cute and full of love little critters i make !! <font color="#d4a19b">♡</font><br>
+　the art of needle felting is a very delicate process that just use natural wool, a special needle and lots of love & patience .. i'm happy to make more people know the extremely soft, delicate and full of love little critters i make !! <font color="#d4a19b">♡</font><br>
+　needle felting is currently my favorite crafting technique so i'm mostly dedicated to it, but you might see a few embroidered pieces & handsewn accessories as well, all featuring my fluffy characters from the poofti world. watch the series and play games <a href="https://middlepot.com/poofties" target="_blank"><font color="#d8b1b1">here</font></a> !<br>
 　get to know each one of them and fall in love <sub><img src="https://i.imgur.com/BciYFwr.gif"></sub><br>
-　if you're interested in any item go to the <a href="/contact"><font color="#d8b1b1">contact page</font></a> !<br>
+　if you're interested in any item please go to the <a href="/contact"><font color="#d8b1b1">contact page</font></a> .<br>
 </font><br></div>
 <font color="#c4a09d">
 　　　　꒰ click the images to open the respective info boxes ꒱
 </font>
 <br><br><br>
-　　　　　　　　<sub><img src="https://i.imgur.com/IC5Quwv.gif"></sub><font style="color: #c9a1ab; text-shadow: 2px 2px #fffdfc;">&nbsp;&nbsp;𝑓𝑟𝑖𝑒𝑛𝑑𝑠 :</font>
+　　　　　　　　<sub><img src="https://i.imgur.com/IC5Quwv.gif"></sub><font style="color: #c9a1ab; text-shadow: 2px 2px #fffdfc;">&nbsp;&nbsp;𝑠𝑡𝑢𝑓𝑓𝑖𝑒𝑠 :</font>
 <br><br><br>
 
 
@@ -233,7 +259,7 @@ function openteddy(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">chubby teddy bear<br>
-　　　$18 dollars ( $36 reais )<br>
+　　　$18 dollars ( $80 reais )<br>
 　　　height : 16cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 10cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft teddy bear with lace details.<br>
@@ -294,7 +320,7 @@ else{ this.src='https://i.imgur.com/roftVNh.png'; }"/>
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">shy bunny<br>
-　　　$18 dollars ( $36 reais )<br>
+　　　$18 dollars ( $80 reais )<br>
 　　　height : 14cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 8,5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft bunny with lacy headband.<br>
@@ -403,7 +429,7 @@ function openlamb(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">lamby<br>
-　　　$18 dollars ( $36 reais )<br>
+　　　$18 dollars ( $80 reais )<br>
 　　　height : 14cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 11cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft lamb with cute ribbon and lacy details.<br>
@@ -468,7 +494,7 @@ function openbunny3(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">bunny pin<br>
-　　　$5 dollars ( $12 reais )<br>
+　　　$5 dollars ( $20 reais )<br>
 　　　height : 6cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 8cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted bunny with lace details & a safety pin on the back.<br>
@@ -522,7 +548,7 @@ function openteddy4(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">chubby teddy pin<br>
-　　　$5 dollars ( $12 reais )<br>
+　　　$5 dollars ( $20 reais )<br>
 　　　height : 5cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 6,5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted cream teddy bear with lace details & a safety pin on the back.<br>
@@ -628,7 +654,7 @@ function openpuppy2(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">pouty puppy pin<br>
-　　　$5 dollars ( $12 reais )<br>
+　　　$5 dollars ( $20 reais )<br>
 　　　height : 6cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 7cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted puppy with cute ribbons & a safety pin on the back.<br>
@@ -680,7 +706,7 @@ function openkitty(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">happy kitty pin<br>
-　　　$5 dollars ( $12 reais )<br>
+　　　$5 dollars ( $20 reais )<br>
 　　　height : 5cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 6,5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted kitty with lace details & a safety pin on the back.<br>
@@ -741,7 +767,7 @@ function openbunny4(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">shy bunny charm<br>
-　　　$12 dollars ( $22 reais )<br>
+　　　$12 dollars ( $50 reais )<br>
 　　　height : 10cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft bunny charm with a little ribbon.<br>
@@ -794,7 +820,7 @@ function openlamb4(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">lamby charm<br>
-　　　$12 dollars ( $22 reais )<br>
+　　　$12 dollars ( $50 reais )<br>
 　　　height : 10cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft lamb charm with a little ribbon.<br>
@@ -847,7 +873,7 @@ function openteddy5(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">cuddly teddy charm<br>
-　　　$12 dollars ( $22 reais )<br>
+　　　$12 dollars ( $50 reais )<br>
 　　　height : 10cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft teddy charm with a little ribbon.<br>
@@ -900,7 +926,7 @@ function openpuppy4(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">pouty puppy charm<br>
-　　　$12 dollars ( $22 reais )<br>
+　　　$12 dollars ( $50 reais )<br>
 　　　height : 10cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft puppy charm with a little ribbon.<br>
@@ -954,7 +980,7 @@ function openkitty4(){
 
 <br>
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">happy kitty charm<br>
-　　　$12 dollars ( $22 reais )<br>
+　　　$12 dollars ( $50 reais )<br>
 　　　height : 10cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 5cm</font><br><br>
 
 　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> gently needle felted soft kitty charm with a little ribbon.<br>
@@ -969,11 +995,342 @@ function openkitty4(){
 <a href="javascript: openkitty4();"><img width="auto" height="200px" src="https://i.imgur.com/6GbAuZE.png"></a>&nbsp;
 
 
+<br><br><br>
+　　　　　　　　<sub><img src="https://i.imgur.com/IC5Quwv.gif"></sub><font style="color: #c9a1ab; text-shadow: 2px 2px #fffdfc;">&nbsp;&nbsp;𝑐𝘩𝑜𝑘𝑒𝑟𝑠 :</font>
+<br><br><br>
+
+
+
+<style type="text/css">
+/*estilo da pop-up*/
+#choker2{
+position: fixed;
+top: 130px;
+left: 400px;
+font: 10px;
+margin: -75px 0 0 -150px;
+display: none;
+z-index: 8; /*0 "10" faz o banner se sobre-por aos demais*/
+}
+</style>
+
+<script type="text/javascript">
+function closechoker2(){
+    document.getElementById('choker2').style.display = 'none';
+}
+function openchoker2(){
+    document.getElementById('choker2').style.display = 'block';
+    setTimeout ("closechoker2()", 999999);
+}
+</script>
+
+<div id="choker2">
+<!--coisinhas-->
+
+<div style="background-image:url(https://i.imgur.com/B1mHZGx.png); color: #BC9F9F; width: 406px;height: 564px;  overflow-y: hidden; overflow-x: hidden; text-align:justify;">
+
+<div><div style="padding-top:57px;">　　　&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript: closechoker2();" ><font style="color:#ab9f9a; font-size:10px;">close box</font></a></div>
+
+<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow-x: hidden;">
+
+<br>
+<center><img width="290px" height="auto" src="https://i.imgur.com/oiHIcoJ.png"></center>
+
+
+<br>
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">beige lace teddy bear choker<br>
+　　　$12 dollars ( $50 reais )<br>
+　　　width : 1,5cm&nbsp;&nbsp;/&nbsp;&nbsp;length : 26cm ( +5cm adjustable )</font><br><br>
+
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> soft beige lace polka dot choker with cute needle felt teddy bear wearing a bow tie with a tiny pearl.<br>
+　extremely delicate and unique item, made with lots of love ♡♡</font><br>
+
+</div>
+</div>
+</div>
+</div>
+<!--coisinhas-->
+
+<a href="javascript: openchoker2();"><img width="auto" height="160px" src="https://i.imgur.com/oiHIcoJ.png"></a>&nbsp;
+
+
+<style type="text/css">
+/*estilo da pop-up*/
+#choker5{
+position: fixed;
+top: 130px;
+left: 400px;
+font: 10px;
+margin: -75px 0 0 -150px;
+display: none;
+z-index: 8; /*0 "10" faz o banner se sobre-por aos demais*/
+}
+</style>
+
+<script type="text/javascript">
+function closechoker5(){
+    document.getElementById('choker5').style.display = 'none';
+}
+function openchoker5(){
+    document.getElementById('choker5').style.display = 'block';
+    setTimeout ("closechoker5()", 999999);
+}
+</script>
+
+<div id="choker5">
+<!--coisinhas-->
+
+<div style="background-image:url(https://i.imgur.com/B1mHZGx.png); color: #BC9F9F; width: 406px;height: 564px;  overflow-y: hidden; overflow-x: hidden; text-align:justify;">
+
+<div><div style="padding-top:57px;">　　　&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript: closechoker5();" ><font style="color:#ab9f9a; font-size:10px;">close box</font></a></div>
+
+<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow-x: hidden;">
+
+<br>
+<center><img width="290px" height="auto" src="https://i.imgur.com/NvJvgbl.jpg"></center>
+
+
+<br>
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">lacy cream teddy choker<br>
+　　　$12 dollars ( $50 reais )<br>
+　　　width : 1,5cm&nbsp;&nbsp;/&nbsp;&nbsp;length : 26cm ( +5cm adjustable )</font><br><br>
+
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> soft beige lacy choker with cute cream needle felt teddy bear wearing a bow tie with a tiny pearl.<br>
+　extremely delicate and unique item, made with lots of love ♡♡</font><br>
+
+</div>
+</div>
+</div>
+</div>
+<!--coisinhas-->
+
+<a href="javascript: openchoker5();"><img width="auto" height="160px" src="https://i.imgur.com/NvJvgbl.jpg"></a>&nbsp;
+
+
+<style type="text/css">
+/*estilo da pop-up*/
+#choker{
+position: fixed;
+top: 130px;
+left: 400px;
+font: 10px;
+margin: -75px 0 0 -150px;
+display: none;
+z-index: 8; /*0 "10" faz o banner se sobre-por aos demais*/
+}
+</style>
+
+<script type="text/javascript">
+function closechoker(){
+    document.getElementById('choker').style.display = 'none';
+}
+function openchoker(){
+    document.getElementById('choker').style.display = 'block';
+    setTimeout ("closechoker()", 999999);
+}
+</script>
+
+<div id="choker">
+<!--coisinhas-->
+
+<div style="background-image:url(https://i.imgur.com/B1mHZGx.png); color: #BC9F9F; width: 406px;height: 564px;  overflow-y: hidden; overflow-x: hidden; text-align:justify;">
+
+<div><div style="padding-top:57px;">　　　&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript: closechoker();" ><font style="color:#ab9f9a; font-size:10px;">close box</font></a></div>
+
+<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow-x: hidden;">
+
+<br>
+<center><img width="290px" height="auto" src="https://i.imgur.com/uncsUgC.png"></center>
+
+
+<br>
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">cream lace teddy bear choker<br>
+　　　$12 dollars ( $50 reais )<br>
+　　　width : 2,5cm&nbsp;&nbsp;/&nbsp;&nbsp;length : 26cm ( +5cm adjustable )</font><br><br>
+
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> soft cream lace choker with cute needle felt teddy bear wearing a bow tie with a tiny pearl.<br>
+　extremely delicate and unique item, made with lots of love ♡♡</font><br>
+
+</div>
+</div>
+</div>
+</div>
+<!--coisinhas-->
+
+<a href="javascript: openchoker();"><img width="auto" height="160px" src="https://i.imgur.com/uncsUgC.png"></a>
+
+
+<br><br>
+<br><br>
+　　　　　　　　<sub><img src="https://i.imgur.com/IC5Quwv.gif"></sub><font style="color: #c9a1ab; text-shadow: 2px 2px #fffdfc;">&nbsp;&nbsp;𝑒𝑎𝑟𝑟𝑖𝑛𝑔𝑠 :</font>
+<br><br><br>
+
+
+
+
+<style type="text/css">
+/*estilo da pop-up*/
+#earrings{
+position: fixed;
+top: 130px;
+left: 400px;
+font: 10px;
+margin: -75px 0 0 -150px;
+display: none;
+z-index: 8; /*0 "10" faz o banner se sobre-por aos demais*/
+}
+</style>
+
+<script type="text/javascript">
+function closeearrings(){
+    document.getElementById('earrings').style.display = 'none';
+}
+function openearrings(){
+    document.getElementById('earrings').style.display = 'block';
+    setTimeout ("closeearrings()", 999999);
+}
+</script>
+
+<div id="earrings">
+<!--coisinhas-->
+
+<div style="background-image:url(https://i.imgur.com/B1mHZGx.png); color: #BC9F9F; width: 406px;height: 564px;  overflow-y: hidden; overflow-x: hidden; text-align:justify;">
+
+<div><div style="padding-top:57px;">　　　&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript: closeearrings();" ><font style="color:#ab9f9a; font-size:10px;">close box</font></a></div>
+
+<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow-x: hidden;">
+
+<br>
+<center><img width="270px" height="auto" src="https://i.imgur.com/Gch33LM.png"></center>
+
+
+<br>
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">cream teddy earrings<br>
+　　　$16 dollars ( $70 reais )<br>
+　　　height : 1,5cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 1,5cm</font><br><br>
+
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> earrings with carefully needle felted small cream teddy bears wearing bow ties with tiny pearls.<br>
+　extremely delicate and unique item, made with lots of love ♡♡</font><br>
+
+</div>
+</div>
+</div>
+</div>
+<!--coisinhas-->
+
+<a href="javascript: openearrings();"><img width="auto" height="200px" src="https://i.imgur.com/Gch33LM.png"></a>　
+
+
+<style type="text/css">
+/*estilo da pop-up*/
+#earrings4{
+position: fixed;
+top: 130px;
+left: 400px;
+font: 10px;
+margin: -75px 0 0 -150px;
+display: none;
+z-index: 8; /*0 "10" faz o banner se sobre-por aos demais*/
+}
+</style>
+
+<script type="text/javascript">
+function closeearrings4(){
+    document.getElementById('earrings4').style.display = 'none';
+}
+function openearrings4(){
+    document.getElementById('earrings4').style.display = 'block';
+    setTimeout ("closeearrings4()", 999999);
+}
+</script>
+
+<div id="earrings4">
+<!--coisinhas-->
+
+<div style="background-image:url(https://i.imgur.com/B1mHZGx.png); color: #BC9F9F; width: 406px;height: 564px;  overflow-y: hidden; overflow-x: hidden; text-align:justify;">
+
+<div><div style="padding-top:57px;">　　　&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript: closeearrings4();" ><font style="color:#ab9f9a; font-size:10px;">close box</font></a></div>
+
+<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow-x: hidden;">
+
+<br>
+<center><img width="270px" height="auto" src="https://i.imgur.com/j9CTiPe.png"></center>
+
+
+<br>
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">bunny earrings<br>
+　　　$16 dollars ( $70 reais )<br>
+　　　height : 1,5cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 3cm</font><br><br>
+
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> earrings with carefully needle felted small bunnies wearing bow ties with tiny pearls.<br>
+　extremely delicate and unique item, made with lots of love ♡♡</font><br>
+
+</div>
+</div>
+</div>
+</div>
+<!--coisinhas-->
+
+<a href="javascript: openearrings4();"><img width="auto" height="200px" src="https://i.imgur.com/j9CTiPe.png"></a>　
+
+
+<style type="text/css">
+/*estilo da pop-up*/
+#earrings2{
+position: fixed;
+top: 130px;
+left: 400px;
+font: 10px;
+margin: -75px 0 0 -150px;
+display: none;
+z-index: 8; /*0 "10" faz o banner se sobre-por aos demais*/
+}
+</style>
+
+<script type="text/javascript">
+function closeearrings2(){
+    document.getElementById('earrings2').style.display = 'none';
+}
+function openearrings2(){
+    document.getElementById('earrings2').style.display = 'block';
+    setTimeout ("closeearrings2()", 999999);
+}
+</script>
+
+<div id="earrings2">
+<!--coisinhas-->
+
+<div style="background-image:url(https://i.imgur.com/B1mHZGx.png); color: #BC9F9F; width: 406px;height: 564px;  overflow-y: hidden; overflow-x: hidden; text-align:justify;">
+
+<div><div style="padding-top:57px;">　　　&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript: closeearrings2();" ><font style="color:#ab9f9a; font-size:10px;">close box</font></a></div>
+
+<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow-x: hidden;">
+
+<br>
+<center><img width="260px" height="auto" src="https://i.imgur.com/y98Wcm4.png"></center>
+
+
+<br>
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font style="font-size: 11px;" color="#bd9fa4">teddy bear earrings<br>
+　　　$16 dollars ( $70 reais )<br>
+　　　height : 1,5cm&nbsp;&nbsp;/&nbsp;&nbsp;width : 1,5cm</font><br><br>
+
+　<img width="18px" height="auto" src="https://i.imgur.com/9J8M3kD.png"> .. <font color="#a89292"> earrings with carefully needle felted small teddy bears wearing bow ties with tiny pearls.<br>
+　extremely delicate and unique item, made with lots of love ♡♡</font><br>
+
+
+</div>
+</div>
+</div>
+</div>
+<!--coisinhas-->
+
+<a href="javascript: openearrings2();"><img width="auto" height="200px" src="https://i.imgur.com/y98Wcm4.png"></a>
 
 
 <br>
 
-</div>
+</div></div>
 
 <div id="hi">
 <center>
@@ -992,10 +1349,9 @@ function openkitty4(){
 </center>
 </div>
 
-
 <br><br><br>
 
-
+</div>
 </body>
 </body>
 
