@@ -71,6 +71,10 @@ border: 1px solid #baaeab;
 }
 </style>
 <style>
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
 #base {
 position: absolute;
 	left: 190px;
@@ -92,7 +96,7 @@ z-index: 3;
 #mtext {
 position: absolute;
 	left: 120px;
-	top: 290px;
+	top: 305px;
 width: 200px;
 height: 220px;
 overflow-x:hidden;
@@ -103,19 +107,26 @@ line-height: 250%;
 #shy {
 position: absolute;
 	left: 120px;
-	top: 250px;
+	top: 255px;
 width: 200px;
 height: 50px;
 overflow-x:hidden;
 z-index: 4;
  }
 
-#text {
+#aaa {
 position: absolute;
 	left: 420px;
-	top: 210px;
-width: 680px;
-height: 280px;
+	top: 200px;
+width: 660px;
+height: 305px;
+overflow-x:hidden;
+z-index: 5;
+ }
+
+#text {
+position: absolute;
+height: 305px;
 overflow-x:hidden;
 z-index: 5;
  }
@@ -124,8 +135,8 @@ z-index: 5;
 position: absolute;
 	left: 580px;
 	top: 150px;
-width: 260px;
-height: 50px;
+width: 265px;
+height: 60px;
 overflow-x:hidden;
 line-height:25px;
 z-index: 4;
@@ -140,12 +151,28 @@ height: 80px;
 overflow-x:hidden;
 z-index: 4;
  }
+
+@media screen and (max-width: 1000px) and (orientation: portrait){
+#everything { position: absolute; zoom: 135%;
+	left:660px;
+	top:-50px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg); }
+#text { overflow: auto; overflow: scroll; }
+}
+@media screen and (max-width: 1000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 100%; left:-5px; top:-5px;}
+#text { overflow: auto; overflow: scroll; }
+}
 </style>
 </head>
 
 <body style="background-image:url(https://i.imgur.com/vKPOMgC.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px;">
 <body ondragstart="return false">
-
+<div id="everything">
 <br><br><br><br><br>
 
 <div id="menu">
@@ -167,9 +194,7 @@ z-index: 4;
 <br>
 　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/felted" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">needle felt critters</font></a>
 <br>
-　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/sewn" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">accessories & clothing</font></a>
-<br>
-　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/embroidered" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">embroidered items</font></a>
+　　<sub><sub><img src="https://i.imgur.com/lDcrpKJ.gif"></sub></sub>　<a href="/stationery" style="text-decoration: none;"><font style="color: #b0a6a5; text-shadow: 2px 2px #fffdfc; font-size:11px;">stationery goods</font></a>
 </font>
 
 </div>
@@ -178,20 +203,21 @@ z-index: 4;
 <img src="https://i.imgur.com/yCcJZ9B.png">
 </div>
 
-
+<div id="aaa">
 <div id="text">
 
 <font color="#a89292">
 
-<br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 
-　　　　　　　　　　　　　　　　　　　　　<font color="#a59090">oh no , 404</font>
+　　　　　　　　　　　　　　　　　　　　　　<font color="#a59090">oh no , 404</font>
 <br><br>
-　　　　　　　　　　　　　　　　　　　　　　　<img src="https://i.imgur.com/WMKsOT0.gif"/>
+　　　　　　　　　　　　　　　　　　　　　　　　<img src="https://i.imgur.com/WMKsOT0.gif"/>
+
 
 </font>
 
-</div>
+</div></div>
 
 <div id="hi">
 <center>
@@ -213,7 +239,7 @@ z-index: 4;
 
 <br><br><br>
 
-
+</div>
 </body>
 </body>
 
