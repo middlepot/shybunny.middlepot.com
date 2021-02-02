@@ -151,7 +151,6 @@ height: 80px;
 overflow-x:hidden;
 z-index: 4;
  }
-
 @media screen and (max-width: 1000px) and (orientation: portrait){
 #everything { position: absolute; zoom: 135%;
 	left:660px;
@@ -161,26 +160,25 @@ z-index: 4;
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg); }
-#teddy { position: absolute; zoom: 135%;
-	left:660px;
-	top:-50px;
+#box { position: absolute; zoom: 125%;
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
-    transform: rotate(90deg); }
-#bunny { position: relative; zoom: 135%;
-	left:660px;
-	top:-50px;
+    transform: rotate(90deg);
+overflow: auto; overflow: scroll; }
+#teddy { position: absolute; zoom: 125%;
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
-    transform: rotate(90deg); }
+    transform: rotate(90deg);
+overflow: auto; overflow: scroll; }
 #text { overflow: auto; overflow: scroll; }
 }
 @media screen and (max-width: 1000px) and (orientation: landscape){
-#everything { position: absolute; zoom: 100%; left:-5px; top:-5px;}
+#everything { position: absolute; zoom: 90%; left:-5px; top:-5px;}
+#teddy { position: absolute; zoom: 90%; overflow: auto; overflow: scroll; }
 #text { overflow: auto; overflow: scroll; }
 }
 </style>
@@ -190,13 +188,12 @@ z-index: 4;
 <body ondragstart="return false">
 
 
-
 <style type="text/css">
 /*estilo da pop-up*/
 #teddy{
 position: fixed;
 top: 130px;
-left: 400px;
+left: 350px;
 font: 10px;
 margin: -75px 0 0 -150px;
 display: none;
@@ -210,19 +207,19 @@ function closeteddy(){
 }
 function openteddy(){
     document.getElementById('teddy').style.display = 'block';
-    setTimeout ("closeteddy()", 999999);
 }
 </script>
 
 <div id="teddy">
 <!--coisinhas-->
 
+<div style="background-color: transparent; width: 402px;height: 564px;">
+
 <div style="background-image:url(https://i.imgur.com/B1mHZGx.png); color: #BC9F9F; width: 406px;height: 564px;  overflow-y: hidden; overflow-x: hidden; text-align:justify;">
 
 <div><div style="padding-top:57px;">　　　&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript: closeteddy();" ><font style="color:#ab9f9a; font-size:10px;">close box</font></a></div>
 
-<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow-x: hidden;">
-
+<div style= "margin-left: 22px; margin-top: 17px; padding-right: 10px; width:360px; height:418px; overflow: auto; overflow: scroll;">
 
 <center><img width="200px" height="auto" src="https://i.imgur.com/lEy69L6.png"></center>
 
@@ -236,6 +233,7 @@ function openteddy(){
 　she's cuddly and would love to become friends with you ! ♡<br>
 　she needs to be adopted by someone who will take care of her, would you be that person.. ?</font><br>
 
+</div>
 </div>
 </div>
 </div>
@@ -726,6 +724,7 @@ function openkitty(){
 
 
 
+
 <div id="everything">
 <br><br><br><br><br>
 
@@ -802,7 +801,6 @@ function openkitty(){
 
 
 <a href="javascript: openbunny3();"><img width="auto" height="115px" src="https://i.imgur.com/cnRtC7R.png"></a>&nbsp;
-
 
 
 <a href="javascript: openteddy4();"><img width="auto" height="115px" src="https://i.imgur.com/35ygh5G.png"></a>&nbsp;
