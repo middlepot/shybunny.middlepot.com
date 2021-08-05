@@ -119,13 +119,28 @@ overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/floofhome.png"></a>
 
-<a href="/floof">
+<a id="examples" href="/floof">
 <img style="position: absolute;
 	left: 588px;
 	top: 225px;
 overflow-y:hidden;
 overflow-x:hidden;
-z-index: 3;" src="./img/examples.gif"></a>
+z-index: 3;" src="./img/examples1.png"></a>
+
+        <script type = "text/javascript">
+            var image = document.getElementById("examples");
+            var currentPos = 0;
+            var images = ["./img/examples1.png", "./img/examples2.png", "./img/examples3.png", "./img/examples4.png", "./img/examples5.png", "./img/examples6.png", "./img/examples7.png", "./img/examples8.png", "./img/examples9.png", "./img/examples10.png", "./img/examples11.png", "./img/examples12.png", "./img/examples13.png", "./img/examples14.png", "./img/examples15.png"]
+
+            function volgendefoto() {
+                if (++currentPos >= images.length)
+                    currentPos = 0;
+
+                image.src = images[currentPos];
+            }
+
+            setInterval(volgendefoto, 500);
+        </script>
 
 
 <a href="/">
