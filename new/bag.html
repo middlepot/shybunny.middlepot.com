@@ -96,12 +96,26 @@ html {
 <script src="js/jimp.js"></script>
 <script src="js/cookies.js"></script>
 <script src="js/store-variables.js"></script>
-<script
-	src="https://www.paypal.com/sdk/js?client-id=Aet2dryKVFoHrAaCgtDpJsADhYgbzWZX6AR8B-0ITrVl7FM0U_6u2-LnxqsBqU0wvnDOHgjgkNo7Pmz3&components=buttons,funding-eligibility">
-</script>
+<script>
+	var loadedPaypalSdk = false;
+	async function loadPaypalSdk(){
+		var base_url = 'https://www.paypal.com/sdk/js?client-id=AaJ_j9vf-Z4jI8C7WrbP81WAsXm7HaMGEtFjvostBsdRBze1xJv3DbSX7DasVPtYVar3urkgUhiX3_2Z&components=buttons,funding-eligibility';
+		var req = await fetch(api_path+'/currency', {method: 'GET'});
+		var res = await req.json();
+		if(res.currency === 'BRL')
+			base_url += '&currency=BRL';
+		var scrEl = document.createElement('script');
+		scrEl.src = base_url;
+		scrEl.onload = function(){
+			loadedPaypalSdk = true;
+		}
+		var head = document.head || document.getElementsByTagName("head")[0];
+		head.insertBefore(scrEl, head.firstChild);
+	}
+	loadPaypalSdk();
+	</script>
 </head>
 
-<!-- <body oncontextmenu="return false" ondragstart="return false" style="background-image:url(./img/bg.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px;"> -->
 <body ondragstart="return false" style="background-image:url(./img/bg.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px; color:#998585; white-space: nowrap;">
 <div id="everything">
 
@@ -647,100 +661,109 @@ z-index: 2;" src="./img/bagtotal.png">
 </div>
 <script>
 	var paypalButtons = [];
-	var FUNDING_SOURCES = [
-		paypal.FUNDING.PAYPAL,
-		paypal.FUNDING.CARD
-	];
-	// Loop over each funding source/payment method
-	FUNDING_SOURCES.forEach(function(fundingSource) {
-		// Initialize the buttons
-		var divContainer = fundingSource === paypal.FUNDING.PAYPAL?'#paypal-button-container':'#card-button-container';
-		var button = paypal.Buttons({
-			fundingSource: fundingSource,
-			style:{
-				tagline: false,
-				height: 40
-			},
-			createOrder: async function (data, actions) {
-				var catcart = [];
-				cart_items.forEach(item =>{
-					catcart.push(item.category);
-				});
-				var code = document.getElementById('coupon').value;
-				var priceFetch = await fetch(api_path+'/order/price', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
+	function loadPaypalButtons(){
+		if(loadedPaypalSdk){
+			var FUNDING_SOURCES = [
+				paypal.FUNDING.PAYPAL,
+				paypal.FUNDING.CARD
+			];
+			// Loop over each funding source/payment method
+			FUNDING_SOURCES.forEach(function(fundingSource) {
+				// Initialize the buttons
+				var divContainer = fundingSource === paypal.FUNDING.PAYPAL?'#paypal-button-container':'#card-button-container';
+				var button = paypal.Buttons({
+					fundingSource: fundingSource,
+					style:{
+						tagline: false,
+						height: 40
 					},
-					body: JSON.stringify({cart: catcart, coupon: code})
-				});
-				var resp = await priceFetch.json();
-				updatedPrice = resp.price;
-				return actions.order.create({
-					purchase_units: [{
-						amount: {
-							value: updatedPrice
+					createOrder: async function (data, actions) {
+						var catcart = [];
+						cart_items.forEach(item =>{
+							catcart.push(item.category);
+						});
+						var code = document.getElementById('coupon').value;
+						var priceFetch = await fetch(api_path+'/order/price', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({cart: catcart, coupon: code})
+						});
+						var resp = await priceFetch.json();
+						updatedPrice = resp.price;
+						return actions.order.create({
+							purchase_units: [{
+								amount: {
+									value: updatedPrice
+								}
+							}]
+						});
+					},
+					onClick: function(){
+						var buyerMailEl = document.getElementById('buyermail');
+						var buyerMail = buyerMailEl.value;
+						if(!validateEmail(buyerMail)){
+							//invalid email
+							buyerMailEl.value = '';
+							return false;
 						}
-					}]
+					},
+					onApprove: function (data, actions) {
+						return actions.order.capture().then(async function (details) {
+							var buyerMailEl = document.getElementById('buyermail');
+							var buyerMail = buyerMailEl.value;
+							var couponEl = document.getElementById('coupon');
+							var usedCoupon = couponEl.value;
+							var previews = document.getElementsByName('item-preview');
+							var formData = JSON.stringify({
+								orderId: details.id,
+								buyerMail: buyerMail,
+								coupon: usedCoupon,
+								items: cart_items
+							});
+
+							//change page layout
+							document.getElementById('tables').style.display = 'none';
+							document.getElementById('bag-state').src = 'img/bagdone.png';
+							document.getElementById('shipping-total').remove();
+							document.getElementById('buyermail').remove();
+							document.getElementById('coupon').remove();
+							document.getElementById('emailvalidator').remove();
+							document.getElementById('grand-total').remove();
+							document.getElementById('coupon-status').remove();
+
+							return fetch(api_path+'/order', {
+								method: 'POST',
+								cache: 'no-cache',
+								headers:{
+									'Content-Type': 'application/json'
+								},
+								body: formData
+							}).then(()=>{
+								//clearCart();
+								paypalButtons.forEach(btn => btn.close());
+							});
+						});
+					},
+					onError: function(err){
+						location.reload();
+					}
 				});
-			},
-			onClick: function(){
-				var buyerMailEl = document.getElementById('buyermail');
-				var buyerMail = buyerMailEl.value;
-				if(!validateEmail(buyerMail)){
-					//invalid email
-					buyerMailEl.value = '';
-					return false;
+				// Check if the button is eligible
+				if(button.isEligible()){
+					// Render the standalone button for that funding source
+					paypalButtons.push(button);
+					button.render(divContainer);
 				}
-			},
-			onApprove: function (data, actions) {
-				return actions.order.capture().then(async function (details) {
-					var buyerMailEl = document.getElementById('buyermail');
-					var buyerMail = buyerMailEl.value;
-					var couponEl = document.getElementById('coupon');
-					var usedCoupon = couponEl.value;
-					var previews = document.getElementsByName('item-preview');
-					var formData = JSON.stringify({
-						orderId: details.id,
-						buyerMail: buyerMail,
-						coupon: usedCoupon,
-						items: cart_items
-					});
-
-					//change page layout
-					document.getElementById('tables').style.display = 'none';
-					document.getElementById('bag-state').src = 'img/bagdone.png';
-					document.getElementById('shipping-total').remove();
-					document.getElementById('buyermail').remove();
-					document.getElementById('coupon').remove();
-					document.getElementById('emailvalidator').remove();
-					document.getElementById('grand-total').remove();
-					document.getElementById('coupon-status').remove();
-
-					return fetch(api_path+'/order', {
-						method: 'POST',
-						cache: 'no-cache',
-						headers:{
-							'Content-Type': 'application/json'
-						},
-						body: formData
-					}).then(()=>{
-						//clearCart();
-						paypalButtons.forEach(btn => btn.close());
-					});
-				});
-			},
-			onError: function(err){
-				location.reload();
-			}
-		});
-		// Check if the button is eligible
-		if(button.isEligible()){
-			// Render the standalone button for that funding source
-			paypalButtons.push(button);
-			button.render(divContainer);
+			});
 		}
-	});
+		else{
+			//await paypal sdk to load
+			setTimeout(loadPaypalButtons, 50);
+		}
+	}
+	loadPaypalButtons();
 </script>
 
 </div>
