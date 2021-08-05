@@ -1,0 +1,750 @@
+<html>
+
+<!--
+
+　　　          ___   .--.
+　　　    .--.-"   "-' .- |
+　　　   / .-,`          .'   
+　　　   \   `           \ 　　　　　　。・゜ 　♡   。　　・　゜ 　　　♡  
+　　　    '.            ・ \　　　　　　　　　　　　　　　　　　　　　　　　♡　　　　♡ ゜・。。♡  
+　　　      |  ・     ᴥ    。|　　　　・゜♡ ゜・。　　. * ・ ♡ °  . 。
+　　　      \ 。            /.____　　　　　　　　　　　　　　　　　　♡.  
+　　　     /`-.          ,'.'    `\　　　　　　　　　　　　　　　　　　。・゜　　　 ♡ ・ 。　　。・゜ ♡  
+　　　  __/   \`-.____.-' `\      /　　　　　♡　。・゜      
+　　　  | `---`'-'._/-`     \----'    _ 　　　　　　　　　　　♡　　　.　　　.♡ 
+　　　  |,-'`  /             |    _.-' `\　　　　. * ・        
+　　　 .'     /              |--'`     / |　　　　　　　　　　 ♡
+　　　/      /\              `         | |
+　　　|   .\/  \      .--. __          \ |　　　　　　　　　　　*.。middlepot.com 
+　　　 '-'      '._       /  `\         /　　　　　　　　　　　　　　　　　　　　　　　ଘ(*´ ˘ `*)ഒ 。.*
+　　　             `\    '     |------'`
+　　　               \  |      |
+　　　                \        /
+ 　　　                '._  _.'
+
+-->
+
+<title>shy bunny store ꒱</title>
+
+<head>
+<link rel="shortcut icon" href="/img/favicon.png">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="title" content="ꔫ">
+<meta name="description" content="꒰ shy bunny store ꒱">
+<meta name="theme-color" content="#f7e9ed">
+<meta property="og:url" content="https://shybunny.middlepot.com">
+<meta property="og:title" content="ꔫ">
+<meta property="og:description" content="꒰ shy bunny store ꒱">
+<meta property="og:image" content="https://middlepot.com/img/delicate.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:type" content="website">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://shybunny.middlepot.com">
+<meta property="twitter:title" content="ꔫ">
+<meta property="twitter:description" content="꒰ shy bunny store ꒱">
+<meta property="twitter:image" content="https://middlepot.com/img/delicate.jpg">
+
+
+<meta name="google-site-verification" content="XSwoCWBrpJECWQJaaNREq2GeweamSFmo78j2dJ_F3AA" />
+
+<style>
+body{ 
+  cursor: url(/img/cursor.png), progress;}
+a:hover {cursor: url(/img/cursorhover.png), progress;}
+ ::selection {text-shadow: 0 0 2px #cec1bb;color:#cec1bb}
+ ::-moz-selection {text-shadow: 0 0 2px #cec1bb;color:#cec1bb}
+</style>
+
+<style type="text/css">
+::-webkit-scrollbar {
+width: 5px;
+height: 4px;
+background: transparent;
+}
+::-webkit-scrollbar-thumb {
+background-color: #fcf7f7;
+-webkit-border-radius: 3ex;
+border-radius: 3ex;
+border: 1px dotted #baaeab;
+}
+</style>
+<style>
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+@media screen and (max-width: 1000px) and (orientation: portrait){
+#everything { position: absolute; zoom: 200%;
+	left:660px; top:-50px;}
+}
+@media screen and (max-width: 1000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 120%; left:-5px; top:-5px;}
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="js/jimp.js"></script>
+<script src="js/cookies.js"></script>
+<script src="js/store-variables.js"></script>
+</head>
+
+<!-- <body oncontextmenu="return false" ondragstart="return false" style="background-image:url(/img/bg.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px;"> -->
+    <body ondragstart="return false" style="background-image:url(/img/bg.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px;">
+<div id="everything">
+
+<script>
+function getCritterType(){
+    for(const [CRITTER] of Object.entries(critters)){
+        if(currentCritter === critters[CRITTER].NAME){
+            return CRITTER;
+        }
+    }
+}
+
+//creates full preview
+async function updatePreview(){
+    //pomisify jimp image creation
+    var JimpCreate = (w, h) => new Promise((resolve) => {new Jimp(w, h, function(err, img){resolve(img);})});
+
+    async function adjustPreviewPosition(category, image){
+        var prevImg = await image.getBase64Async(Jimp.MIME_PNG);
+        var itemPreview = document.getElementById('item_preview');
+        itemPreview.src = prevImg;
+        var scale = category.PREVIEW.HEIGHT/image.bitmap.height;
+        var imgw = image.bitmap.width * scale;
+        itemPreview.style.display = 'block';
+        if(category.PREVIEW.BASE){
+            itemPreview.style.top = category.PREVIEW.BASE.TOP;
+            itemPreview.style.left = category.PREVIEW.BASE.LEFT-imgw/2;
+        }
+        else{
+            itemPreview.style.top = category.PREVIEW.TOP;
+            itemPreview.style.left = category.PREVIEW.LEFT-imgw/2;
+        }
+
+        //ruler location
+        var rulerEl = document.getElementById('ruler');
+        rulerEl.src = 'img/ruler'+category.CATEGORY+'.png';
+        rulerEl.style.top = category.PREVIEW.RULER.TOP;
+        rulerEl.style.left = category.PREVIEW.RULER.LEFT;
+        document.getElementById('rulers').style.display = 'block';
+    }
+
+    if(!loadingSomething){
+        loadingSomething = true;
+        //gets critter type
+        var critterType = getCritterType();
+        var baseOffset = 10;
+        switch(currentCategory){
+            case categories.STUFFIE.CATEGORY:{
+                //critter
+                var jimg, jbody, jhead, jarm;
+                var jimgprom = JimpCreate(300, 340).then(img => jimg = img);
+                var bodyprom = Jimp.read(critters[critterType].BODY).then(img => jbody = img);
+                var armprom = Jimp.read(critters[critterType].ARMS[currentVariation]).then(img => jarm = img);
+                var headprom = Jimp.read(critters[critterType].HEAD).then(img => jhead = img);
+                await Promise.all([jimgprom, bodyprom, headprom, armprom]);
+                //makes critter
+                jimg.composite(jbody, baseOffset, baseOffset);
+                if(currentAccessory >= 0 && currentAccessory < critters[critterType].ACCESSORIES.length){
+                    //load accessory
+                    var acc = critters[critterType].ACCESSORIES[currentAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    //if arm is behind accessory
+                    if(!critters[critterType].ACCESSORIES[currentAccessory].BEHIND_ARMS[currentVariation]){
+                        if(currentVariation === 2) //this arm is above face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                        jimg.composite(jarm, baseOffset, baseOffset);
+                        if(currentVariation < 2) //this arm is below face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                        //accessory
+                        jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                    }
+                    else{
+                        //arm above accessory
+                        if(currentVariation === 2){ //this arm is above face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                            jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                        }
+                        jimg.composite(jarm, baseOffset, baseOffset);
+                        if(currentVariation < 2){ //this arm is below face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                            jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                        }
+                    }
+                }
+                else{
+                    //there are no accessories
+                    if(currentVariation === 2) //this arm is above face
+                        jimg.composite(jhead, baseOffset, baseOffset);
+                    jimg.composite(jarm, baseOffset, baseOffset);
+                    if(currentVariation < 2) //this arm is below face
+                        jimg.composite(jhead, baseOffset, baseOffset);
+                }
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.STUFFIE, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.STUFFIE.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.STUFFIE.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.STUFFIE.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.STUFFIE.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.STUFFIE.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.STUFFIE.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+                var rulerEl = document.getElementById('ruler');
+                rulerEl.src = 'img/rulerstuffie.png';
+                rulerEl.style.top = '100px';
+                rulerEl.style.left = '300px';
+                document.getElementById('rulers').style.display = 'block';
+
+                break;
+            }
+            case categories.PIN.CATEGORY:{
+                //critter
+                var jimg, jcrit;
+                var jimgprom = JimpCreate(300, 400).then(img => jimg = img);
+                var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
+                await Promise.all([jimgprom, imgprom]);
+                if(currentAccessory >= 0 && currentAccessory < critters[critterType].ACCESSORIES.length){
+                    var acc = critters[critterType].ACCESSORIES[currentAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    jcrit.composite(jacc, acc.POSX, acc.POSY);
+                }
+                //adds critter to preview
+                jimg.composite(jcrit, baseOffset, baseOffset);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.PIN, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.PIN.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.PIN.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.PIN.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.PIN.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.PIN.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.PIN.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
+            case categories.CHARM.CATEGORY:{
+                //critter
+                var jimg, jcrit, jbase, jbody, jhead, jarm;
+                var baseprom = Jimp.read('img/charmbase.png').then(img => jbase = img);
+                var jimgprom = JimpCreate(300, 340).then(img => jimg = img);
+                var critprom = JimpCreate(300, 340).then(img => jcrit = img);
+                var bodyprom = Jimp.read(critters[critterType].BODY).then(img => jbody = img);
+                var armprom = Jimp.read(critters[critterType].ARMS[currentVariation]).then(img => jarm = img);
+                var headprom = Jimp.read(critters[critterType].HEAD).then(img => jhead = img);
+                await Promise.all([jimgprom, critprom, baseprom, bodyprom, headprom, armprom]);
+                //makes critter
+                jcrit.composite(jbody, baseOffset, baseOffset);
+                if(currentAccessory >= 0 && currentAccessory < critters[critterType].ACCESSORIES.length){
+                    //load accessory
+                    var acc = critters[critterType].ACCESSORIES[currentAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    //if arm is behind accessory
+                    if(!critters[critterType].ACCESSORIES[currentAccessory].BEHIND_ARMS[currentVariation]){
+                        if(currentVariation === 2) //this arm is above face
+                            jcrit.composite(jhead, baseOffset, baseOffset);
+                        jcrit.composite(jarm, baseOffset, baseOffset);
+                        if(currentVariation < 2) //this arm is below face
+                            jcrit.composite(jhead, baseOffset, baseOffset);
+                        //accessory
+                        jcrit.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                    }
+                    else{
+                        //arm above accessory
+                        if(currentVariation === 2){ //this arm is above face
+                            jcrit.composite(jhead, baseOffset, baseOffset);
+                            jcrit.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                        }
+                        jcrit.composite(jarm, baseOffset, baseOffset);
+                        if(currentVariation < 2){ //this arm is below face
+                            jcrit.composite(jhead, baseOffset, baseOffset);
+                            jcrit.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                        }
+                    }
+                }
+                else{
+                    //there are no accessories
+                    if(currentVariation === 2) //this arm is above face
+                        jcrit.composite(jhead, baseOffset, baseOffset);
+                    jcrit.composite(jarm, baseOffset, baseOffset);
+                    if(currentVariation < 2) //this arm is below face
+                        jcrit.composite(jhead, baseOffset, baseOffset);
+                }
+
+                //adds critter to preview
+                jbase.resize(Jimp.AUTO, categories.CHARM.PREVIEW.BASE.HEIGHT);
+                jcrit.resize(Jimp.AUTO, categories.CHARM.PREVIEW.HEIGHT);
+                jcrit.autocrop();
+                jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, baseOffset);
+                jimg.composite(jcrit, jimg.bitmap.width/2-jcrit.bitmap.width/2, baseOffset+jbase.bitmap.height-40);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.CHARM, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.CHARM.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.CHARM.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.CHARM.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.CHARM.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.CHARM.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.CHARM.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
+            case categories.EARRING.CATEGORY:{
+                //critter
+                var jimg, jbase, jcrit;
+                var jimgprom = JimpCreate(300, 400).then(img => jimg = img);
+                var baseprom = Jimp.read('img/earringbase.png').then(img => jbase = img);
+                var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
+                await Promise.all([jimgprom, baseprom, imgprom]);
+                if(currentChokerAccessory >= 0 && currentChokerAccessory < critters[critterType].CHOKER_ACCESSORIES.length){
+                    var acc = critters[critterType].CHOKER_ACCESSORIES[currentChokerAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    jcrit.composite(jacc, acc.POSX, acc.POSY);
+                }
+                //adds critter to preview
+                jcrit.resize(Jimp.AUTO, categories.EARRING.PREVIEW.HEIGHT);
+                jbase.resize(Jimp.AUTO, categories.EARRING.PREVIEW.BASE.HEIGHT);
+                var offx1 = 10;
+                jimg.composite(jbase, baseOffset+offx1, baseOffset);
+                jimg.composite(jcrit, baseOffset+categories.EARRING.PREVIEW.LEFT-jcrit.bitmap.width/2, baseOffset+categories.EARRING.PREVIEW.TOP);
+                var offx2 = 80;
+                jimg.composite(jbase, baseOffset+offx2, baseOffset);
+                jimg.composite(jcrit, baseOffset+offx2-offx1+categories.EARRING.PREVIEW.LEFT-jcrit.bitmap.width/2, baseOffset+categories.EARRING.PREVIEW.TOP);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.EARRING, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.EARRING.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.EARRING.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.EARRING.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.EARRING.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.EARRING.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.EARRING.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
+            case categories.CHOKER.CATEGORY:{
+                //critter
+                var jimg, jbase, jcrit;
+                var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
+                var baseprom = Jimp.read(chokers[currentChokerVariation]).then(img => jbase = img);
+                var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
+                await Promise.all([jimgprom, baseprom, imgprom]);
+                if(currentChokerAccessory >= 0 && currentChokerAccessory < critters[critterType].CHOKER_ACCESSORIES.length){
+                    var acc = critters[critterType].CHOKER_ACCESSORIES[currentChokerAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    jcrit.composite(jacc, acc.POSX, acc.POSY);
+                }
+                //adds critter to preview
+                jcrit.resize(Jimp.AUTO, categories.CHOKER.PREVIEW.HEIGHT);
+                jbase.resize(categories.CHOKER.PREVIEW.BASE.WIDTH, Jimp.AUTO);
+                jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, 20);
+                jimg.composite(jcrit, categories.CHOKER.PREVIEW.LEFT-jcrit.bitmap.width/2, categories.CHOKER.PREVIEW.TOP);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.CHOKER, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.CHOKER.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.CHOKER.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.CHOKER.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.CHOKER.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.CHOKER.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.CHOKER.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
+        }
+        loadingSomething = false;
+    }
+}
+
+function changeCritter(e){
+    e = e || window.event;
+    var target = e.target || e.srcElement;
+    var critter = target.getAttribute('critter');
+    if(critter){
+        currentCritter = critter;
+        currentCategory = categories.STUFFIE.CATEGORY;
+        currentVariation = 0;
+        currentAccessory = -1;
+        updatePreview();
+    }
+}
+
+function nextVariation(){
+    if(!loadingSomething){
+        if(currentCategory === categories.CHOKER.CATEGORY){
+            currentChokerVariation += 1;
+            if(currentChokerVariation >= chokers.length)
+                currentChokerVariation = 0;
+        }
+        else if(currentCategory !== categories.EARRING.CATEGORY){
+            currentVariation += 1;
+            var critterType = getCritterType();
+            if(currentVariation >= critters[critterType].ARMS.length)
+                currentVariation = 0;
+        }
+        //updates preview
+        updatePreview();
+    }
+}
+
+function nextAccessory(){
+    if(!loadingSomething){
+        var critterType = getCritterType();
+        if(currentCategory === categories.CHOKER.CATEGORY || currentCategory === categories.EARRING.CATEGORY){
+            currentChokerAccessory += 1;
+            if(currentChokerAccessory >= critters[critterType].CHOKER_ACCESSORIES.length)
+                currentChokerAccessory = -1;
+        }
+        else{
+            currentAccessory += 1;
+            if(currentAccessory >= critters[critterType].ACCESSORIES.length)
+                currentAccessory = -1;
+        }
+
+        //updates preview
+        updatePreview();
+    }
+}
+
+function toggleRuler(){
+    var rulerEl = document.getElementById('ruler');
+    var rulersEl = document.getElementById('rulers');
+    if(rulerEl.style.display === 'block'){
+        rulerEl.style.display = 'none';
+        rulersEl.src = 'img/seerulers.png';
+    }
+    else{
+        rulerEl.style.display = 'block';
+        rulersEl.src = 'img/hiderulers.png';
+    }
+}
+
+function changeCategory(e){
+    if(currentCritter){
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        var cat = target.getAttribute('category');
+        if(currentCategory !== cat){
+            //changes accessory if going to choker or earring
+            if((cat === categories.CHOKER.CATEGORY && currentCategory !== categories.CHOKER.CATEGORY) ||
+            (cat === categories.EARRING.CATEGORY && currentCategory !== categories.EARRING.CATEGORY)){
+                var critterType = getCritterType();
+                var acc = critters[critterType].ACCESSORIES[currentAccessory];
+                if(acc){
+                    acc = acc.IMG;
+                    //goes to first matching color accessory
+                    if(acc.includes('_w')){
+                        var chokers = critters[critterType].CHOKER_ACCESSORIES;
+                        for(var i = 0; i < chokers.length; ++i){
+                            var current = critters[critterType].CHOKER_ACCESSORIES[i].IMG;
+                            if(current.includes('_w')){
+                                currentChokerAccessory = i;
+                                break;
+                            }
+                        }
+                    }
+                    else if(acc.includes('_p')){
+                        var chokers = critters[critterType].CHOKER_ACCESSORIES;
+                        for(var i = 0; i < chokers.length; ++i){
+                            var current = critters[critterType].CHOKER_ACCESSORIES[i].IMG;
+                            if(current.includes('_p')){
+                                currentChokerAccessory = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            //change category
+            currentCategory = cat;
+        }
+        else
+            currentCategory = categories.STUFFIE.CATEGORY;
+        //updates preview
+        updatePreview();
+    }
+}
+
+function resetCritter(){
+    currentCritter = '';
+    currentVariation = 0;
+    currentAccessory = -1;
+    currentCategory = '';
+    currentChokerVariation = 0;
+    currentChokerAccessory = -1;
+    loadingSomething = false;
+    //removes preview
+    var itemPreview = document.getElementById('item_preview');
+    itemPreview.removeAttribute('src');
+    itemPreview.style.display = 'none';
+    //remove rulers
+    var rulerEl = document.getElementById('ruler');
+    rulerEl.style.display = 'none';
+    var rulersEl = document.getElementById('rulers');
+    rulersEl.src = 'img/seerulers.png';
+    rulersEl.style.display = 'none';
+    //display buttons
+    var variEl = document.getElementById('variations');
+    variEl.style.display = 'none';
+    var accEl = document.getElementById('accessories');
+    accEl.style.display = 'none';
+    //personality
+    var nameEl = document.getElementById('fluffname');
+    nameEl.value = '';
+    var traitsEl = document.getElementById('flufftraits');
+    traitsEl.value = '';
+    var hobbyEl = document.getElementById('fluffhobby');
+    hobbyEl.value = '';
+}
+</script>
+
+<script>
+	//cart variables
+	var cart_items = [];
+	//add current item to cart
+	function addToCart(){
+		if(currentCritter && currentVariation >= 0){
+			var nameEl = document.getElementById('fluffname');
+			var name = '';
+			if(nameEl && nameEl.value)
+				name = nameEl.value;
+			
+			var traitsEl = document.getElementById('flufftraits');
+			var traits = '';
+			if(traitsEl && traitsEl.value)
+				traits = traitsEl.value;
+
+			var hobbyEl = document.getElementById('fluffhobby');
+			var hobby = '';
+			if(hobbyEl && hobbyEl.value)
+				hobby = hobbyEl.value;
+
+			var item = {
+				category: currentCategory,
+				critter: currentCritter,
+				accessory: currentAccessory,
+				choker_accessory: currentChokerAccessory,
+				variation: currentVariation,
+				choker_variation: currentChokerVariation,
+				name: name,
+				traits: traits,
+				hobby: hobby
+			}
+			cart_items.push(item);
+			setCookie("cart_items", JSON.stringify(cart_items));
+			updateCart();
+			resetCritter();
+		}
+	}
+
+	//updates cart display
+	function updateCart(){
+		var bag = document.getElementById('bagsmall');
+		if(bag){
+			var amt = cart_items.length;
+			if(amt <= 0)
+				amt = 'empty'
+			else
+				amt += ' items';
+			bag.innerHTML = '( '+amt+' )';
+		}
+	}
+
+	//load cart from to cookies
+	function loadCart(){
+		var cartCookie = getCookie("cart_items");
+		if(cartCookie){
+			var cart = JSON.parse(cartCookie);
+			if(Array.isArray(cart) && cart.length > 0){
+				cart_items = cart;
+				updateCart();
+			}
+		}
+	}
+</script>
+
+<img style="position: absolute;
+	left: 340px;
+	top: 20px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 1;" src="/img/floofbase.png">
+
+<a><img id="charmbutton" style="position: absolute;
+	left: 648px;
+	top: 337px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/charmbutton.png" category="charm" onclick="changeCategory();"></a>
+
+<a><img id="pinbutton" style="position: absolute;
+	left: 776px;
+	top: 336px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/pinbutton.png" category="pin" onclick="changeCategory();"></a>
+
+<a><img id="chokerbutton" style="position: absolute;
+	left: 648px;
+	top: 394px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/chokerbutton.png" category="choker" onclick="changeCategory();"></a>
+
+<a><img id="earringsbutton" style="position: absolute;
+	left: 775px;
+	top: 395px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/earringsbutton.png" category="earring" onclick="changeCategory();"></a>
+
+<a><img id="rulers" style="position: absolute;
+	left: 515px;
+	top: 475px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 20;
+display: none;" onclick="toggleRuler();" src="/img/seerulers.png"></a>
+
+<a><img id="accessories" style="position: absolute;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 20;
+display: none;" src="/img/accessoriesbutton.png" onclick="nextAccessory();"></a>
+
+<a><img id="variations" style="position: absolute;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 20;
+display: none;" src="/img/variationsbutton.png" onclick="nextVariation();"></a>
+
+<a href="/">
+<img style="position: absolute;
+	left: 600px;
+	top: 600px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/homeleft.png"></a>
+
+<a href="/contact">
+<img style="position: absolute;
+	left: 530px;
+	top: 40px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/contactfloof.png"></a>
+
+<a><img id="addtobag" style="position: absolute;
+	left: 655px;
+	top: 485px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/addtobag.png" onclick="addToCart();"></a>
+
+<a href="/bag"><img style="position: absolute;
+	left: 780px;
+	top: 460px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="/img/bagsmall.png"></a>
+
+<a href="/bag"><div id="bagsmall" style="position: absolute; left: 785px; top: 585px;
+overflow: hidden; z-index: 4; width:110px; height:20px; text-align: center;
+background: transparent; resize: none; padding:5px; outline:none; border: 0px;
+color: #9e8e8e; font-family: Calibri; transform: rotate(8deg);
+font-size: 11px; letter-spacing:1px; line-height:15px;">
+</div></a>
+
+<textarea id="fluffname" maxlength="16" style="position: absolute; left: 440px; top: 555px;
+overflow: hidden; z-index: 25; width:110px; height:20px;
+background: transparent; resize: none; padding:5px; outline:none;
+border: 0px; cursor: url(/img/cursorwrite.png), progress; color: #9e8e8e; font-family: Calibri;
+font-size: 11px; letter-spacing:1px; line-height:15px;"></textarea>
+
+<textarea id="flufftraits" maxlength="16" style="position: absolute; left: 442px; top: 580px;
+overflow: hidden; z-index: 25; width:110px; height:20px;
+background: transparent; resize: none; padding:5px; outline:none;
+border: 0px; cursor: url(/img/cursorwrite.png), progress; color: #9e8e8e; font-family: Calibri;
+font-size: 11px; letter-spacing:1px; line-height:15px;"></textarea>
+
+<textarea id="fluffhobby" maxlength="16" style="position: absolute; left: 444px; top: 603px;
+overflow: hidden; z-index: 25; width:110px; height:20px;
+background: transparent; resize: none; padding:5px; outline:none;
+border: 0px; cursor: url(/img/cursorwrite.png), progress; color: #9e8e8e; font-family: Calibri;
+font-size: 11px; letter-spacing:1px; line-height:15px;"></textarea>
+
+<!-- stuffies -->
+<img src="/img/cow_preview.png" critter="cow" onclick="changeCritter(event);" style="position: absolute; top: 115px; left: 635px; height: 90px; z-index: 10;">
+<img src="/img/chick_preview.png" critter="chick" onclick="changeCritter(event);" style="position: absolute; top: 120px; left: 680px; height: 85px; z-index: 10;">
+<img src="/img/puppy2_preview.png" critter="puppy2" onclick="changeCritter(event);" style="position: absolute; top: 115px; left: 725px; height: 90px; z-index: 10;">
+<img src="/img/frog_preview.png" critter="frog" onclick="changeCritter(event);" style="position: absolute; top: 120px; left: 770px; height: 85px; z-index: 10;">
+<img src="/img/teddy2_preview.png" critter="teddy2" onclick="changeCritter(event);" style="position: absolute; top: 115px; left: 815px; height: 90px; z-index: 10;">
+<img src="/img/duck_preview.png" critter="duck" onclick="changeCritter(event);" style="position: absolute; top: 120px; left: 860px; height: 85px; z-index: 10;">
+
+<img src="/img/bunny_preview.png" critter="bunny" onclick="changeCritter(event);" style="position: absolute; top: 230px; left: 645px; height: 90px; z-index: 10;">
+<img src="/img/kitty_preview.png" critter="kitty" onclick="changeCritter(event);" style="position: absolute; top: 230px; left: 695px; height: 90px; z-index: 10;">
+<img src="/img/lamb_preview.png" critter="lamb" onclick="changeCritter(event);" style="position: absolute; top: 230px; left: 740px; height: 90px; z-index: 10;">
+<img src="/img/puppy_preview.png" critter="puppy" onclick="changeCritter(event);" style="position: absolute; top: 230px; left: 790px; height: 90px; z-index: 10;">
+<img src="/img/teddy_preview.png" critter="teddy" onclick="changeCritter(event);" style="position: absolute; top: 230px; left: 845px; height: 90px; z-index: 10;">
+
+<!-- preview -->
+<img id="item_preview" style="display: none; z-index: 12; position: absolute;"></img>
+
+<!-- ruler -->
+<img id="ruler" style="position: absolute; z-index: 20; display: none;">
+
+<script>loadCart();</script>
+
+</div>
+</body>
+
+<!--
+
+　　　          ___   .--.
+　　　    .--.-"   "-' .- |
+　　　   / .-,`          .'   
+　　　   \   `           \ 　　　　　　。・゜ 　♡   。　　・　゜ 　　　♡  
+　　　    '.            ・ \　　　　　　　　　　　　　　　　　　　　　　　　♡　　　　♡ ゜・。。♡  
+　　　      |  ・     ᴥ    。|　　　　・゜♡ ゜・。　　. * ・ ♡ °  . 。
+　　　      \ 。            /.____　　　　　　　　　　　　　　　　　　♡.  
+　　　     /`-.          ,'.'    `\　　　　　　　　　　　　　　　　　　。・゜　　　 ♡ ・ 。　　。・゜ ♡  
+　　　  __/   \`-.____.-' `\      /　　　　　♡　。・゜      
+　　　  | `---`'-'._/-`     \----'    _ 　　　　　　　　　　　♡　　　.　　　.♡ 
+　　　  |,-'`  /             |    _.-' `\　　　　. * ・        
+　　　 .'     /              |--'`     / |　　　　　　　　　　 ♡
+　　　/      /\              `         | |
+　　　|   .\/  \      .--. __          \ |　　　　　　　　　　　*.。middlepot.com 
+　　　 '-'      '._       /  `\         /　　　　　　　　　　　　　　　　　　　　　　　ଘ(*´ ˘ `*)ഒ 。.*
+　　　             `\    '     |------'`
+　　　               \  |      |
+　　　                \        /
+ 　　　                '._  _.'
+
+-->
+
+</html>
