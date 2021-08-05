@@ -568,8 +568,10 @@ function resetCritter(){
 		if(bag){
 			var amt = cart_items.length;
 			if(amt <= 0)
-				amt = 'empty'
-			else
+				amt = 'empty';
+			else if (amt<=1)
+        amt += ' item';
+      else
 				amt += ' items';
 			bag.innerHTML = '( '+amt+' )';
 		}
