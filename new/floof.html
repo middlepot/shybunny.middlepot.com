@@ -582,9 +582,9 @@ function resetCritter(){
 			var cart = JSON.parse(cartCookie);
 			if(Array.isArray(cart) && cart.length > 0){
 				cart_items = cart;
-				updateCart();
 			}
 		}
+    updateCart();
 	}
 </script>
 
