@@ -122,20 +122,18 @@ z-index: 3;" src="./img/sendbutton.png" onclick="sendForm();"></a>
 		var name = document.getElementById('name');
 		var email = document.getElementById('email');
 		var message = document.getElementById('message');
-		if(name.value && email.value && message.value){
-			fetch(api_path+'/form', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({name: name.value, email: email.value, message: message.value})
-			});
-			name.remove();
-			email.remove();
-			message.remove();
-			document.getElementById('send').remove();
-			document.getElementById('form-image').src = 'img/contactformsent.png';
-		}
+		fetch(api_path+'/form', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({name: name.value, email: email.value, message: message.value})
+		});
+		name.remove();
+		email.remove();
+		message.remove();
+		document.getElementById('send').remove();
+		document.getElementById('form-image').src = 'img/contactformsent.png';
 	}
 </script>
 <input id="name" maxlength="30" style="position: absolute; left: 530px; top: 245px;
