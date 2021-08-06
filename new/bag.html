@@ -99,7 +99,7 @@ html {
 <script>
 	var loadedPaypalSdk = false;
 	async function loadPaypalSdk(){
-		var base_url = 'https://www.paypal.com/sdk/js?client-id=AaJ_j9vf-Z4jI8C7WrbP81WAsXm7HaMGEtFjvostBsdRBze1xJv3DbSX7DasVPtYVar3urkgUhiX3_2Z&components=buttons,funding-eligibility';
+		var base_url = 'https://www.paypal.com/sdk/js?client-id=Aet2dryKVFoHrAaCgtDpJsADhYgbzWZX6AR8B-0ITrVl7FM0U_6u2-LnxqsBqU0wvnDOHgjgkNo7Pmz3&components=buttons,funding-eligibility';
 		var req = await fetch(api_path+'/currency', {method: 'GET'});
 		var res = await req.json();
 		if(res.currency === 'BRL')
@@ -752,7 +752,7 @@ z-index: 2;" src="./img/bagtotal.png">
 						});
 					},
 					onError: function(err){
-						//location.reload();
+						location.reload();
 					}
 				});
 				// Check if the button is eligible
