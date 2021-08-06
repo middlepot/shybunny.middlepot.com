@@ -746,7 +746,7 @@ z-index: 2;" src="./img/bagtotal.png">
 								},
 								body: formData
 							}).then(()=>{
-								//clearCart();
+								clearCart();
 								paypalButtons.forEach(btn => btn.close());
 							});
 						});
