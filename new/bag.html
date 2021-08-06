@@ -693,7 +693,7 @@ z-index: 2;" src="./img/bagtotal.png">
 						var resp = await priceFetch.json();
 						updatedPrice = resp.price;
 						var convReq = await fetch(api_path+'/currency/conversion?amt='+updatedPrice, {method: 'GET'});
-						var convRes = await req.json();
+						var convRes = await convReq.json();
 						var currency = convRes.currency;
 						var finalValue = convRes.amount;
 						return actions.order.create({
