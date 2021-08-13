@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <script>var api_path = 'https://api.middlepot.com/v1';</script>
+    </head>
+    <body>
+        <script>
+            async function sendForm(){
+                var user = document.getElementById('user').value;
+                var password = document.getElementById('password').value;
+                var oid = document.getElementById('orderId').value;
+                var tracking = document.getElementById('tracking').value;
+                var req = await fetch(api_path+'/order/tracking', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user: user,
+                        password: password,
+                        orderId: oid,
+                        tracking: tracking
+                    })
+                });
+                if(req.status < 200 || req.status >= 300){
+                    alert('an error occurred '+req.status);
+                }
+                else{
+                    //all ok
+                    location.reload();
+                }
+            }
+        </script>
+        <div style="display: flex; flex-direction: column; width: 300px;">
+            <label for="user">user</label>
+            <input type="text" name="user" id="user">
+            <label for="password">password</label>
+            <input type="password" name="password" id="password">
+            <label for="orderId">order id</label>
+            <input type="text" name="orderId" id="orderId">
+            <label for="tracking">tracking codes (line break sepparated)</label>
+            <textarea style="height: 150px;" name="tracking" id="tracking"></textarea>
+            <br>
+            <button onclick="sendForm();">send</button>
+        </div>
+    </body>
+</html>
