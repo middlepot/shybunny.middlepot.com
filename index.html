@@ -159,6 +159,41 @@ overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/manualsmall.png"></a>
 
+<script>
+var shybunny_cookies_name = 'shybunny_cookie_accept';
+function acceptedCookies(){
+  setCookie(shybunny_cookies_name, 'accepted');
+  document.getElementById('cookiewindow').style.display = 'none';
+  document.getElementById('cookieconfirm').style.display = 'none';
+}
+</script>
+<a id="cookieconfirm" onclick="acceptedCookies();" style="display:none;">
+<img style="position: absolute;
+	left: 695px;
+	top: 580px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 10;" src="./img/cookieconfirm.png"></a>
+
+<img id="cookiewindow" style="display:none;
+position: absolute;
+	left: 673px;
+	top: 480px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 8;" src="./img/cookiewindow.png">
+
+<script>
+function getCookieAcceptance(){
+  var accept = getCookie(shybunny_cookies_name);
+  if(accept !== 'accepted'){
+    document.getElementById('cookiewindow').style.display = 'block';
+    document.getElementById('cookieconfirm').style.display = 'block';
+  }
+}
+getCookieAcceptance();
+</script>
+
 <a href="/bag">
 <img style="position: absolute;
 	left: 780px;
