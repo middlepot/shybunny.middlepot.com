@@ -1,7 +1,5 @@
 <img width="380" height="30" src="https://middlepot.com/img/lacey.png">\
-　＿\
-⊂⊂ ・）　꒰ ‌ 𝑠𝘩𝑦𝑏𝑢𝑛𝑛𝑦.𝑚𝑖𝑑𝑑𝑙𝑒𝑝𝑜𝑡.𝑐𝑜𝑚 ‌ ꒱\
-꒰ა/　|っ✄　꒰ ‌ shy bunny store ‌ ꒱\
-⊂____u\
+  \
+ ‌ ‌ ‌ ‌꒰ ‌ 𝑠ℎ𝑦 𝑏𝑢𝑛𝑛𝑦 𝑠𝑡𝑜𝑟𝑒 : ‌ shybunny.middlepot.com ‌ ꒱\
   \
 <img width="380" height="230" src="https://middlepot.com/img/delicate.jpg">
