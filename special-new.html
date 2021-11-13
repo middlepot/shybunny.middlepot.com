@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <script>var api_path = 'https://api.middlepot.com/v1';</script>
+    </head>
+    <body>
+        <script>
+            async function sendForm(){
+                var user = document.getElementById('user').value;
+                var password = document.getElementById('password').value;
+                var req = await fetch(api_path+'/order/special/new', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user: user,
+                        password: password
+                    })
+                });
+                if(req.status === 403){
+                    alert('wrong user or password');
+                }
+                else if(req.status !== 200){
+                    alert('an error occurred '+req.status);
+                }
+                else{
+                    //all ok
+                    var data = await req.json();
+                    document.getElementById('link').innerHTML = 'link: https://shybunny.middlepot.com/specialbag?code='+data.code;
+                }
+            }
+        </script>
+        <div style="display: flex; flex-direction: column; width: 300px;">
+            <label for="user">user</label>
+            <input type="text" name="user" id="user">
+            <label for="password">password</label>
+            <input type="password" name="password" id="password">
+            <br>
+            <button onclick="sendForm();">send</button>
+        </div>
+        <p id="link"></p>
+    </body>
+</html>
