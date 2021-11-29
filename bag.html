@@ -183,11 +183,14 @@ html {
 				}
 			}
 		});
-		finalPrice = (packagePrice*packageCount);
+		if(packageCount >= 4)
+			finalPrice += 30; //30usd for a box
+		else
+			finalPrice = (packagePrice*packageCount);
 		var mode = packageCount+' package';
 		if(packageCount > 1)
 			mode += 's';
-		var boxes = Math.floor(packageCount/5);
+		var boxes = Math.floor(packageCount/4);
 		if(boxes > 0){
 			mode = '1 box';
 		}
