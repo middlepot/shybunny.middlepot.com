@@ -165,7 +165,10 @@ html {
 				}
 			}
 		});
-		finalPrice = (packagePrice*packageCount);
+		if(packageCount >= 5)
+			finalPrice += 30; //30usd for a box
+		else
+			finalPrice = (packagePrice*packageCount);
 		var mode = packageCount+' package';
 		if(packageCount > 1)
 			mode += 's';
