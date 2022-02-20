@@ -111,12 +111,57 @@ html {
 <script src="js/cookies.js"></script>
 <script src="js/store-variables.js"></script>
 <script>
+	function showShippingWarning(){
+		var whiteoverlay = document.createElement('div');
+		whiteoverlay.id = 'shippingWarningOverlay';
+		whiteoverlay.style.position = 'fixed';
+		whiteoverlay.style.display = 'flex';
+		whiteoverlay.style.justifyContent = 'center';
+		whiteoverlay.style.alignItems = 'center';
+		whiteoverlay.style.width = '100%';
+		whiteoverlay.style.height = '100%';
+		whiteoverlay.style.top = '0';
+		whiteoverlay.style.left = '0';
+		whiteoverlay.style.background = 'rgba(255, 255, 255, 0.3)';
+		whiteoverlay.style.zIndex = '999990';
+		$(whiteoverlay).insertAfter('head');
+
+		var warning = document.createElement('img');
+		warning.id = 'shippingWarningMessage';
+		warning.src = './img/shippingwarning.png';
+		warning.style.position = 'absolute';
+		warning.style.display = 'block';
+		warning.style.top = '190px';
+		warning.style.left = '500px';
+		warning.style.zIndex = '999991';
+		$('#everything').append(warning);
+
+		var close = document.createElement('img');
+		close.id = 'shippingWarningClose';
+		close.src = './img/bagdelete.png';
+		close.style.position = 'absolute';
+		close.style.display = 'block';
+		close.style.top = '200px';
+		close.style.left = '720px';
+		close.style.zIndex = '999992';
+		close.onclick = function(){
+			$('#shippingWarningOverlay')[0].remove();
+			$('#shippingWarningMessage')[0].remove();
+			$('#shippingWarningClose')[0].remove();
+		}
+		$('#everything').append(close);
+	}
+
 	var loadedPaypalSdk = false;
+	var buyerCurrency = 'USD';
+	var buyerCountry = 'unknown';
 	async function loadPaypalSdk(){
 		var base_url = 'https://www.paypal.com/sdk/js?client-id=AaJ_j9vf-Z4jI8C7WrbP81WAsXm7HaMGEtFjvostBsdRBze1xJv3DbSX7DasVPtYVar3urkgUhiX3_2Z&components=buttons,funding-eligibility';
 		var req = await fetch(api_path+'/currency', {method: 'GET'});
 		var res = await req.json();
-		if(res.currency === 'BRL')
+		buyerCurrency = res.currency;
+		buyerCountry = res.country;
+		if(buyerCountry === 'BR')
 			base_url += '&currency=BRL';
 		var scrEl = document.createElement('script');
 		scrEl.src = base_url;
@@ -125,6 +170,12 @@ html {
 		}
 		var head = document.head || document.getElementsByTagName("head")[0];
 		head.insertBefore(scrEl, head.firstChild);
+
+		//check if must show warning
+		var shippingRestricted = ['AR', 'AU', 'NZ', 'PH'];
+		if(buyerCountry === 'unknown' || shippingRestricted.includes(buyerCountry)){
+			showShippingWarning();
+		}
 	}
 	loadPaypalSdk();
 	</script>
@@ -673,25 +724,48 @@ overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/bagtotal.png">
 
-<img src="./img/notebag.png" style="position: absolute; z-index: 2; top: 565px; left: 685px;">
+<img id="notebag" src="./img/notebag.png" style="position: absolute; z-index: 2; top: 565px; left: 685px;">
 
 <script>loadCart();</script>
 <!-- Add the checkout buttons, set up the order and approve the order -->
-<img src="./img/checkoutback.png" style="position: absolute; z-index: 2; top: 525px; left: 485px;">
-<img src="./img/checkoutpaypal.png" style="pointer-events: none; position: absolute; z-index: 4; top: 529px; left: 489px;">
-<img src="./img/checkoutcredit.png" style="pointer-events: none; position: absolute; z-index: 4; top: 574px; left: 489px;">
+<div id="paypal-payment-methods">
+	<img src="./img/checkoutback.png" style="position: absolute; z-index: 2; top: 525px; left: 485px;">
+	<img src="./img/checkoutpaypal.png" style="pointer-events: none; position: absolute; z-index: 4; top: 529px; left: 489px;">
+	<img src="./img/checkoutcredit.png" style="pointer-events: none; position: absolute; z-index: 4; top: 574px; left: 489px;">
+</div>
 <div id="paypal-container" style="z-index: 3; width: 175px; position: absolute; top: 530px; left: 490px;">
 	<div class="hoverable" id="paypal-button-container"></div>
 	<div class="hoverable" id="card-button-container" style="margin-top: 5px;"></div>
 </div>
 <script>
 	var paypalButtons = [];
+	var buyerCardRestricted = false;
 	function loadPaypalButtons(){
 		if(loadedPaypalSdk){
 			var FUNDING_SOURCES = [
-				paypal.FUNDING.PAYPAL,
-				paypal.FUNDING.CARD
+				paypal.FUNDING.PAYPAL
 			];
+			//check buyer country to determine available payment
+			var cardRestrictedCountries = ['BR', 'JP', 'RU'];
+			buyerCardRestricted = cardRestrictedCountries.includes(buyerCountry);
+			if(!buyerCardRestricted){
+				//enable card payment
+				FUNDING_SOURCES.push(paypal.FUNDING.CARD);
+			}
+			//restricted
+			else{
+				//check if from brazil
+				/* if(buyerCurrency == 'BRL'){
+
+				}
+				else{
+					
+				} */
+				var el = $(`<img src="./img/jprussiacheckout.png" style="pointer-events: none; position: absolute; z-index: 4; top: 524px; left: 485px;">`);
+				$('#paypal-payment-methods').empty().append(el);
+				$('#notebag')[0].src = './img/jprussianotebag.png';
+			}
+
 			// Loop over each funding source/payment method
 			FUNDING_SOURCES.forEach(function(fundingSource) {
 				// Initialize the buttons
