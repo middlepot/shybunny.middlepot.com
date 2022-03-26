@@ -105,7 +105,7 @@ html {
 <div id="everything">
 
 <img style="position: absolute;
-	left: 150px;
+	left: 130px;
 	top: 10px;
 overflow-y:hidden;
 overflow-x:hidden;
@@ -119,8 +119,16 @@ overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/homeright.png"></a>
 
-<div style="position: absolute; left: 500px; top: 180px;
-overflow: auto; overflow: scroll; z-index: 5; width:330px; height:360px;
+<style>
+tr { padding: 3px; text-align:center; }
+td { padding: 0px; text-align:center; max-width:200px; }
+th { padding: 3px; text-align:center; max-width:200px; font-weight:normal; padding:10px; }
+::placeholder { color:#bda4a4; opacity: 1; font-size: 8px; }
+::-ms-input-placeholder { color:#bda4a4; opacity: 1; font-size: 8px; }
+</style>
+
+<div style="position: absolute; left: 390px; top: 200px;
+overflow: auto; overflow: scroll; z-index: 5; width:800px; height:360px;
 background: transparent; resize: none; outline:none;
 border: 0px; color: #9e8e8e; font-family: Calibri;
 font-size: 11px; letter-spacing:1px; line-height:15px;">
@@ -153,17 +161,13 @@ font-size: 11px; letter-spacing:1px; line-height:15px;">
                 }
             }
         </script>
-        <div style="display: flex; flex-direction: column; width: 300px;">
-            <label for="user">user</label>
-            <input type="text" name="user" id="user">
-            <label for="password">password</label>
-            <input type="password" name="password" id="password">
-            <label for="orderId">order id</label>
-            <input type="text" name="orderId" id="orderId">
-            <label for="tracking">tracking codes ( line break sepparated )</label>
-            <textarea style="height: 150px;" name="tracking" id="tracking"></textarea>
+        <div style="text-align:center; width: 500px;">
+            <input type="text" name="user" id="user" placeholder="type your user" maxlength="50" style="height:31px; width:140px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/textbox.png); outline:none; padding-left:5px; padding-right:5px; cursor: url(./img/cursorwrite.png), progress; font-family: Verdana; font-size: 10px; letter-spacing:1px; color:#b8a0a3; text-align:center;"/><br>
+            <input type="password" name="password" id="password" placeholder="type your password" maxlength="50" style="height:31px; width:140px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/textbox.png); outline:none; padding-left:5px; padding-right:5px; cursor: url(./img/cursorwrite.png), progress; font-family: Verdana; font-size: 10px; letter-spacing:1px; color:#b8a0a3; text-align:center;"/><br>
+            <input type="text" name="orderId" id="orderId" placeholder="type the order id" maxlength="50" style="height:31px; width:140px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/textbox.png); outline:none; padding-left:5px; padding-right:5px; cursor: url(./img/cursorwrite.png), progress; font-family: Verdana; font-size: 10px; letter-spacing:1px; color:#b8a0a3; text-align:center;"/><br><br>
+            <textarea name="tracking" id="tracking" style="height: 100px; width: 150px; cursor: url(./img/cursorwrite.png), progress; border:1px dotted #ADA49C;  outline:none; padding:2px; padding-left:3px; padding-right:3px; font-size:10px; font-family:Verdana; color: #a58282; background-image:url(./img/bg.png); background-repeat: repeat; resize: none;"></textarea><br>
             <br>
-            <button onclick="sendForm();">send</button>
+            <input style="width:50px; height:31px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/okbutton.png); cursor: url(./img/cursorhover.png), progress; outline: none;" type="button" onclick="sendForm();"/>
         </div>
 
 </div></div>
