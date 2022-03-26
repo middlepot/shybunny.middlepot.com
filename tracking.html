@@ -103,6 +103,29 @@ html {
 
 <body oncontextmenu="return false" ondragstart="return false" style="background-image:url(./img/bg.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px; color:#998585; white-space: nowrap;">
 <div id="everything">
+
+<img style="position: absolute;
+	left: 150px;
+	top: 10px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 1;" src="./img/doily.png">
+
+<a href="/">
+<img style="position: absolute;
+	left: 1000px;
+	top: 200px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="./img/homeright.png"></a>
+
+<div style="position: absolute; left: 500px; top: 180px;
+overflow: auto; overflow: scroll; z-index: 5; width:330px; height:360px;
+background: transparent; resize: none; outline:none;
+border: 0px; color: #9e8e8e; font-family: Calibri;
+font-size: 11px; letter-spacing:1px; line-height:15px;">
+<div style="position: absolute; left:10px; right:10px;">
+
         <script>
             async function sendForm(){
                 var user = document.getElementById('user').value;
@@ -137,11 +160,14 @@ html {
             <input type="password" name="password" id="password">
             <label for="orderId">order id</label>
             <input type="text" name="orderId" id="orderId">
-            <label for="tracking">tracking codes (line break sepparated)</label>
+            <label for="tracking">tracking codes ( line break sepparated )</label>
             <textarea style="height: 150px;" name="tracking" id="tracking"></textarea>
             <br>
             <button onclick="sendForm();">send</button>
         </div>
+
+</div></div>
+
 </body>
 
 <!--

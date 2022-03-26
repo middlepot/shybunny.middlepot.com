@@ -103,6 +103,29 @@ html {
 
 <body oncontextmenu="return false" ondragstart="return false" style="background-image:url(./img/bg.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px; color:#998585; white-space: nowrap;">
 <div id="everything">
+
+<img style="position: absolute;
+	left: 150px;
+	top: 10px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 1;" src="./img/doily.png">
+
+<a href="/">
+<img style="position: absolute;
+	left: 1000px;
+	top: 200px;
+overflow-y:hidden;
+overflow-x:hidden;
+z-index: 2;" src="./img/homeright.png"></a>
+
+<div style="position: absolute; left: 500px; top: 230px;
+overflow: auto; overflow: scroll; z-index: 5; width:330px; height:360px;
+background: transparent; resize: none; outline:none;
+border: 0px; color: #9e8e8e; font-family: Calibri;
+font-size: 11px; letter-spacing:1px; line-height:15px;">
+<div style="position: absolute; left:10px; right:10px;">
+
         <script>
             async function sendForm(){
                 var user = document.getElementById('user').value;
@@ -130,15 +153,15 @@ html {
                 }
             }
         </script>
-        <div style="display: flex; flex-direction: column; width: 300px;">
-            <label for="user">user</label>
-            <input type="text" name="user" id="user">
-            <label for="password">password</label>
-            <input type="password" name="password" id="password">
+        <div style="text-align:center; width: 300px;">
+            <input type="text" name="user" id="user" placeholder="type your user" maxlength="50" style="height:31px; width:140px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/textbox.png); outline:none; padding-left:5px; padding-right:5px; cursor: url(./img/cursorwrite.png), progress; font-family: Verdana; font-size: 10px; letter-spacing:1px; color:#b8a0a3; text-align:center;"><br>
+            <input type="password" name="password" id="password" placeholder="type your password" maxlength="50" style="height:31px; width:140px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/textbox.png); outline:none; padding-left:5px; padding-right:5px; cursor: url(./img/cursorwrite.png), progress; font-family: Verdana; font-size: 10px; letter-spacing:1px; color:#b8a0a3; text-align:center;"><br>
             <br>
-            <button onclick="sendForm();">send</button>
+            <button style="width:50px; height:31px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/okbutton.png); cursor: url(./img/cursorhover.png), progress; outline: none;" onclick="sendForm();">generate</button>
         </div>
         <p id="link"></p>
+
+</div></div>
 </body>
 
 <!--
