@@ -153,14 +153,12 @@ font-size: 11px; letter-spacing:1px; line-height:15px;">
                     })
                 });
                 document.getElementById('input_credentials_error_invalid').style.display = 'none';
+                document.getElementById('input_error_invalid').style.display = 'none';
                 if(req.status === 403){
                     document.getElementById('input_credentials_error_invalid').style.display = 'block';
-                    return;
                 }
-                document.getElementById('input_error_invalid').style.display = 'none';
                 else if(req.status !== 200){
                     document.getElementById('input_error_invalid').style.display = 'block';
-                    return;
                 }
                 else{
                     //all ok
