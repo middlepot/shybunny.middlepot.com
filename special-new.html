@@ -164,6 +164,15 @@ font-size: 11px; letter-spacing:1px; line-height:15px;">
             <br>
             <input style="width:50px; height:31px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/okbutton.png); cursor: url(./img/cursorhover.png), progress; outline: none;" type="button" onclick="sendForm();"/>
 <br><br>
+<script>
+function copyTextFromArea(areaId){
+	var area = document.getElementById(areaId);
+	area.focus();
+	area.select();
+	area.setSelectionRange(0, 99999);
+	document.execCommand("copy");
+}
+</script>
 <center><div style="height:43px; width:166px; border: 0px solid #baaeab;
  cursor: url(./img/cursorwrite.png), progress;
  outline:none;
@@ -175,7 +184,7 @@ font-size:6px; font-family:Verdana; COLOR: #a58282;">
  outline:none; padding:10px; overflow:hidden;
 background-color: transparent; word-break: break-all;
 font-size:6px; font-family:Verdana; COLOR: #a58282;"></p></div>
-<input onclick="copyTextFromArea('widget-profile-text-body');"
+<input onclick="copyTextFromArea('link');"
 style="width:73px; height:20px; overflow-x:hidden; cursor: url(./img/cursorhover.png), progress; outline:none; background-color: transparent;
 background-image:url(./img/copybutton.png); border: 0px solid #baaeab; -webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none; -ms-user-select: none;user-select: none;" type="button"></input>
 </center>
