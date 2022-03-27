@@ -122,6 +122,13 @@ z-index: 2;" src="./img/homeright.png"></a>
 <style>
 ::placeholder { color:#bda4a4; opacity: 1; font-size: 8px; }
 ::-ms-input-placeholder { color:#bda4a4; opacity: 1; font-size: 8px; }
+.error-message {
+	color: #aa9194;
+	font-size: 9px;
+	padding-top:8px;
+	letter-spacing: 1px;
+	display: none;
+}
 </style>
 
 <div style="position: absolute; left: 490px; top: 230px;
@@ -145,11 +152,15 @@ font-size: 11px; letter-spacing:1px; line-height:15px;">
                         password: password
                     })
                 });
+                document.getElementById('input_credentials_error_invalid').style.display = 'none';
                 if(req.status === 403){
-                    alert('wrong user or password');
+                    document.getElementById('input_credentials_error_invalid').style.display = 'block';
+                    return;
                 }
+                document.getElementById('input_error_invalid').style.display = 'none';
                 else if(req.status !== 200){
-                    alert('an error occurred '+req.status);
+                    document.getElementById('input_error_invalid').style.display = 'block';
+                    return;
                 }
                 else{
                     //all ok
@@ -161,6 +172,8 @@ font-size: 11px; letter-spacing:1px; line-height:15px;">
         <div style="text-align:center; width: 300px; overflow-wrap: anywhere; word-break: break-all;">
             <input type="text" name="user" id="user" placeholder="type your user" maxlength="50" style="height:31px; width:140px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/textbox.png); outline:none; padding-left:5px; padding-right:5px; cursor: url(./img/cursorwrite.png), progress; font-family: Verdana; font-size: 10px; letter-spacing:1px; color:#b8a0a3; text-align:center;"/><br>
             <input type="password" name="password" id="password" placeholder="type your password" maxlength="50" style="height:31px; width:140px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/textbox.png); outline:none; padding-left:5px; padding-right:5px; cursor: url(./img/cursorwrite.png), progress; font-family: Verdana; font-size: 10px; letter-spacing:1px; color:#b8a0a3; text-align:center;"/><br>
+	<p class="error-message" id="input_credentials_error_invalid">wrong user or password !</p>
+	<p class="error-message" id="input_error_invalid">something went wrong !</p>
             <br>
             <input style="width:50px; height:31px; border: none; border-width: 0px !important; background-color: transparent; background-image:url(./img/okbutton.png); cursor: url(./img/cursorhover.png), progress; outline: none;" type="button" onclick="sendForm();"/>
 <br><br>
