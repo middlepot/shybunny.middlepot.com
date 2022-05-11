@@ -110,6 +110,7 @@ html {
 <script src="js/jimp.js"></script>
 <script src="js/cookies.js"></script>
 <script src="js/store-variables.js"></script>
+<script src="js/util.js"></script>
 <script>
 	function showShippingWarning(){
 		var whiteoverlay = document.createElement('div');
@@ -153,16 +154,25 @@ html {
 	}
 
 	var loadedPaypalSdk = false;
+	var loadedMercadopagoSdk = false;
 	var buyerCurrency = 'USD';
 	var buyerCountry = 'unknown';
+	var gotUserLocation = false;
+	var brlConversionRate = 4; // 1 USD = 4 BRL
+	async function getBuyerLocation(){
+		try{
+			var req = await fetch(api_path+'/currency', {method: 'GET'});
+			var res = await req.json();
+			buyerCurrency = res.currency;
+			buyerCountry = res.country;
+		}
+		catch(err){
+			throw err;
+		}
+		gotUserLocation = true;
+	}
 	async function loadPaypalSdk(){
 		var base_url = 'https://www.paypal.com/sdk/js?client-id=AaJ_j9vf-Z4jI8C7WrbP81WAsXm7HaMGEtFjvostBsdRBze1xJv3DbSX7DasVPtYVar3urkgUhiX3_2Z&components=buttons,funding-eligibility';
-		var req = await fetch(api_path+'/currency', {method: 'GET'});
-		var res = await req.json();
-		buyerCurrency = res.currency;
-		buyerCountry = res.country;
-		if(buyerCountry === 'BR')
-			base_url += '&currency=BRL';
 		var scrEl = document.createElement('script');
 		scrEl.src = base_url;
 		scrEl.onload = function(){
@@ -177,7 +187,31 @@ html {
 			showShippingWarning();
 		}
 	}
-	loadPaypalSdk();
+	async function loadMercadopagoSdk(){
+		var scrEl = document.createElement('script');
+		scrEl.src = 'https://sdk.mercadopago.com/js/v2';
+		scrEl.onload = function(){
+			loadedMercadopagoSdk = true;
+		}
+		var head = document.head || document.getElementsByTagName("head")[0];
+		head.insertBefore(scrEl, head.firstChild);
+	}
+
+	getBuyerLocation();
+
+	//awaits user location to define which sdk to load
+	var awaitingUserLocation = setInterval(function(){
+		if(gotUserLocation){
+			//if brazil, load mercadopago
+			if(buyerCountry === 'BR')
+				loadMercadopagoSdk();
+			//not brazil, load paypal
+			else
+				loadPaypalSdk();
+
+			clearInterval(awaitingUserLocation);
+		}
+	}, 10);
 	</script>
 </head>
 
@@ -185,22 +219,6 @@ html {
 <div id="everything">
 
 <script>
-	function validateEmail(email) {
-		var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		var test = re.test(String(email).toLowerCase());
-		var mailValidatorEl = document.getElementById('emailvalidator');
-		if(test){
-			mailValidatorEl.src = 'img/couponok.png';
-		}
-		else{
-			mailValidatorEl.src = 'img/couponwrong.png';
-			var mailInputEl = document.getElementById('buyermail');
-			mailInputEl.placeholder = 'please type a valid email !';
-		}
-		mailValidatorEl.style.display = 'block';
-		return test;
-	}
-
 	function getCritterType(item){
 		for(const [CRITTER] of Object.entries(critters)){
 			if(item.critter === critters[CRITTER].NAME){
@@ -222,7 +240,11 @@ html {
 	function getItemPrice(cat){
 		for(const [CATEGORY] of Object.entries(categories)){
 			if(cat === categories[CATEGORY].CATEGORY){
-				return categories[CATEGORY].PRICE;
+				var price = categories[CATEGORY].PRICE;
+				if(loadedMercadopagoSdk)
+					price *= brlConversionRate;
+
+				return price;
 			}
 		}
 	}
@@ -252,6 +274,10 @@ html {
 			finalPrice += 30; //30usd for a box
 		else
 			finalPrice = (packagePrice*packageCount);
+		//charging in BRL
+		if(loadedMercadopagoSdk)
+			finalPrice *= brlConversionRate;
+
 		var mode = packageCount+' package';
 		if(packageCount > 1)
 			mode += 's';
@@ -267,22 +293,18 @@ html {
 		var finalPrice = 0;
 		cart_items.forEach(item =>{
 			if(item){
-				for(const [ITEM] of Object.entries(categories)){
-					if(item.category === categories[ITEM].CATEGORY){
-						finalPrice += categories[ITEM].PRICE;
-						break;
-					}
-				}
+				finalPrice += getItemPrice(item.category);
 			}
 		});
 		return finalPrice;
 	}
 
 	async function calculateFinalPrice(){
+		var currency = (loadedPaypalSdk?' usd':' reais');
 		//sets shipping fee
 		var shipping = calculateShipping();
 		var shippingEl = document.getElementById('shipping-total');
-		shippingEl.innerHTML = '$ '+shipping.total+' usd ( ' + shipping.mode + ' )';
+		shippingEl.innerHTML = (loadedMercadopagoSdk?'R':'')+'$ '+shipping.total+currency+' ( ' + shipping.mode + ' )';
 		//gets final price
 		var total = (calculateItemsPrice()+shipping.total);
 		var totalDiscounted = total*(1-(appliedDiscount/100));
@@ -293,13 +315,17 @@ html {
 		
 		var totalEl = document.getElementById('grand-total');
 		if(!appliedDiscount || appliedDiscount <= 0){
-			totalEl.innerHTML = '$ '+totalFloat+' usd';
+			totalEl.innerHTML = (loadedMercadopagoSdk?'R':'')+'$ '+totalFloat+currency;
 			return totalFloat;
 		}
 		else{
-			totalEl.innerHTML = '$ <span style="text-decoration: line-through;">'+totalFloat+'</span> '+totalDiscountedFloat+' usd';
+			totalEl.innerHTML = (loadedMercadopagoSdk?'R':'')+'$ <span style="text-decoration: line-through;">'+totalFloat+'</span> '+totalDiscountedFloat+currency;
 			return parseFloat(totalDiscounted);
 		}
+	}
+	
+	function cartIsEmpty(){
+		return (!cart_items || cart_items.length <= 0)
 	}
 	
 	function removeFromCart(){
@@ -556,7 +582,7 @@ html {
 				//price
 				tr = document.createElement('tr');
 				td = document.createElement('td');
-				td.innerHTML = '$'+getItemPrice(item.category);
+				td.innerHTML = (loadedMercadopagoSdk?'R':'')+'$'+getItemPrice(item.category);
 				tr.appendChild(td);
 				document.getElementById('table-price').appendChild(tr);
 				//quantity
@@ -592,9 +618,14 @@ html {
 		}
 	}
 
-	//load cart from to cookies
+	function clearCart(){
+		setCookie("cart_items", JSON.stringify([]));
+		deleteCookie("cart_items");
+	}
+
+	//load cart from cookies
 	function loadCart(){
-		if(!loadingSomething){
+		if(!loadingSomething && (loadedMercadopagoSdk || loadedPaypalSdk)){
 			var cartCookie = getCookie("cart_items");
 			if(cartCookie){
 				var cart = JSON.parse(cartCookie);
@@ -605,13 +636,8 @@ html {
 			updateCart();
 		}
 		else{
-			setTimeout(loadCart, 50); //retry in 50ms
+			setTimeout(loadCart, 50);
 		}
-	}
-
-	function clearCart(){
-		setCookie("cart_items", JSON.stringify([]));
-		deleteCookie("cart_items");
 	}
 
 	var oldCouponCode = '';
@@ -624,10 +650,10 @@ html {
 			oldCouponCode = code;
 			var req = await fetch(api_path+'/coupon?code='+code, {method: 'GET'});
 			var res = await req.json();
-			if(res && res.discount){
+			if(res){
 				statusEl.style.display = 'block';
 				statusEl.src = 'img/couponok.png';
-				appliedDiscount = res.discount;
+				appliedDiscount = res;
 			}
 			else{
 				statusEl.style.display = 'block';
@@ -726,7 +752,6 @@ z-index: 2;" src="./img/bagtotal.png">
 
 <img id="notebag" src="./img/notebag.png" style="position: absolute; z-index: 2; top: 565px; left: 685px;">
 
-<script>loadCart();</script>
 <!-- Add the checkout buttons, set up the order and approve the order -->
 <div id="paypal-payment-methods">
 	<img src="./img/checkoutback.png" style="position: absolute; z-index: 2; top: 525px; left: 485px;">
@@ -736,6 +761,9 @@ z-index: 2;" src="./img/bagtotal.png">
 <div id="paypal-container" style="z-index: 3; width: 175px; position: absolute; top: 530px; left: 490px;">
 	<div class="hoverable" id="paypal-button-container"></div>
 	<div class="hoverable" id="card-button-container" style="margin-top: 5px;"></div>
+</div>
+<div id="mercadopago-container" style="display: none;">
+	<a><img src="./img/brazilcheckout.png" id="mercadopago-button" onclick="openAddressForm();" style="position: absolute; z-index: 4; top: 529px; left: 489px;"></a>
 </div>
 <script>
 	var paypalButtons = [];
@@ -754,13 +782,6 @@ z-index: 2;" src="./img/bagtotal.png">
 			}
 			//restricted
 			else{
-				//check if from brazil
-				/* if(buyerCurrency == 'BRL'){
-
-				}
-				else{
-					
-				} */
 				var el = $(`<img src="./img/jprussiacheckout.png" style="pointer-events: none; position: absolute; z-index: 4; top: 524px; left: 485px;">`);
 				$('#paypal-payment-methods').empty().append(el);
 				$('#notebag')[0].src = './img/jprussianotebag.png';
@@ -790,7 +811,7 @@ z-index: 2;" src="./img/bagtotal.png">
 							body: JSON.stringify({cart: catcart, coupon: code})
 						});
 						var resp = await priceFetch.json();
-						updatedPrice = resp.price;
+						updatedPrice = resp.price.price;
 						var convReq = await fetch(api_path+'/currency/conversion?amt='+updatedPrice, {method: 'GET'});
 						var convRes = await convReq.json();
 						var currency = convRes.currency;
@@ -862,13 +883,219 @@ z-index: 2;" src="./img/bagtotal.png">
 				}
 			});
 		}
-		else{
-			//await paypal sdk to load
+		else if(!loadedMercadopagoSdk){
+			//await paypal sdk to load, if needed
 			setTimeout(loadPaypalButtons, 50);
 		}
 	}
+	
+	var mercadopago;
+	var mercadopagoCheckout;
+	function loadMercadopagoButtons(){
+		if(loadedMercadopagoSdk){
+			
+			//hide paypal containers and show mercadopago
+			document.getElementById('paypal-payment-methods').style.display = 'none';
+			document.getElementById('paypal-container').style.display = 'none';
+			document.getElementById('mercadopago-container').style.display = 'block';
+			document.getElementById('mercadopago-button').style.display = 'block';
+			document.getElementById('notebag').src = './img/brazilnotebag.png';
+
+			//check if came redirected from mercadopago
+			var mercadopagostatus = getQueryParam('mercadopago_status');
+			if(mercadopagostatus === 'approved' || mercadopagostatus === 'pending'){
+				clearCart();
+				//show 'done' message
+				document.getElementById('tables').style.display = 'none';
+				document.getElementById('bag-state').src = 'img/bagdone.png';
+				document.getElementById('shipping-total').remove();
+				document.getElementById('buyermail').remove();
+				document.getElementById('coupon').remove();
+				document.getElementById('emailvalidator').remove();
+				document.getElementById('grand-total').remove();
+				document.getElementById('coupon-status').remove();
+			}
+
+			mercadopago = new MercadoPago('APP_USR-6039baf3-61e2-45ee-bc85-b6c9e0cba763', {
+				locale: 'pt-BR'
+			});
+		}
+		else if(!loadedPaypalSdk){
+			//await paypal sdk to load, if needed
+			setTimeout(loadMercadopagoButtons, 10);
+		}
+	}
+	async function openMercadopago(){
+		
+		showLoadingOverlay();
+
+		//parse cart
+		var catcart = [];
+		cart_items.forEach(item =>{
+			catcart.push(item.category);
+		});
+		var name = document.getElementById('addressform-name').value;
+		var street = document.getElementById('addressform-street').value;
+		var number = document.getElementById('addressform-number').value;
+		var compl = document.getElementById('addressform-compl').value;
+		var city = document.getElementById('addressform-city').value;
+		var state = document.getElementById('addressform-state').value;
+		var cep = document.getElementById('addressform-cep').value;
+		//init checkout
+		var prefId;
+		try{
+			var req = await fetch(api_path+'/order/mercadopago/preference/create',{
+				method: 'POST',
+				headers:{
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify({
+					cart: catcart,
+					rawcart: cart_items,
+					address:{
+						name: name,
+						street: street,
+						number: number,
+						compl: compl,
+						city: city,
+						state: state,
+						cep: cep
+					},
+					email: document.getElementById('buyermail').value,
+					coupon: document.getElementById('coupon').value
+				})
+			});
+			if(req.status === 200){
+				var body = await req.json();
+				prefId = body.preference;
+			}
+			//create and open checkout
+			mercadopagoCheckout = await mercadopago.checkout({
+				preference:{
+					id: prefId
+				}
+			});
+			mercadopagoCheckout.open();
+		}
+		catch(err){
+			console.log(err);
+		}
+		hideLoadingOverlay();
+	}
+	
+	function openAddressForm(){
+		if(cartIsEmpty()){
+			return false;
+		}
+		//validate buyer email
+		var buyerMailEl = document.getElementById('buyermail');
+		var buyerMail = buyerMailEl.value;
+		if(!validateEmail(buyerMail)){
+			buyerMailEl.value = '';
+			return false;
+		}
+		//show address form
+		var addressFormOverlay = $.parseHTML(`<div id="addressFormOverlay"
+		style="position:fixed; display:flex; justify-content:center; align-items:center; width:100%;
+		height:100%; top: 0; left: 0; background:#fff; opacity:0.3; z-index:999997">`);
+		$(addressFormOverlay).insertAfter('head');
+		var addressFormFields = $.parseHTML(`
+		<div id="addressForm">
+			<img id="addressform" style="position: absolute; left: 500px; top: 190px; overflow-y:hidden; overflow-x:hidden; z-index: 999998;" src="./img/address-brazil.png">
+			
+			<input id="addressform-name" style="position: absolute; left: 540px; top: 242px;
+			overflow: hidden; z-index: 999999; width: 190px; height:20px;
+			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+			background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+			<input id="addressform-street" style="position: absolute; left: 540px; top: 285px;
+			overflow: hidden; z-index: 999999; width: 190px; height:20px;
+			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+			background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+			<input id="addressform-number" style="position: absolute; left: 540px; top: 330px;
+			overflow: hidden; z-index: 999999; width: 80px; height:20px;
+			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+			background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+			<input id="addressform-compl" style="position: absolute; left: 645px; top: 330px;
+			overflow: hidden; z-index: 999999; width: 80px; height:20px;
+			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+			background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+			<input id="addressform-city" style="position: absolute; left: 540px; top: 375px;
+			overflow: hidden; z-index: 999999; width: 190px; height:20px;
+			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+			background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+			<input id="addressform-state" style="position: absolute; left: 540px; top: 420px;
+			overflow: hidden; z-index: 999999; width: 95px; height:20px;
+			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+			background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+			<input id="addressform-cep" inputmode="numeric" pattern="\d*" style="position: absolute; left: 540px; top: 462px;
+			overflow: hidden; z-index: 999999; width: 95px; height:20px;
+			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+			background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+			<a><img src="./img/bagdelete.png" style="z-index: 999999; position: absolute; left: 715px; top: 197px;" onclick="closeAddressForm();"></a>
+			<a><img src="./img/ok-address.png" style="z-index: 999999; position: absolute; left: 660px; top: 410px;" onclick="confirmAddressForm();"></a>
+		</div>`);
+		$('#everything').append(addressFormFields);
+	}
+	function confirmAddressForm(){
+		var name = document.getElementById('addressform-name');
+		var street = document.getElementById('addressform-street');
+		var number = document.getElementById('addressform-number');
+		var city = document.getElementById('addressform-city');
+		var state = document.getElementById('addressform-state');
+		var cep = document.getElementById('addressform-cep');
+		if(!name.value){
+			name.placeholder = 'insira um nome';
+			return false;
+		}
+		if(!street.value){
+			street.placeholder = 'insira uma rua';
+			return false;
+		}
+		if(!validateInt(number.value)){
+			number.value = '';
+			number.placeholder = 'insira um número válido';
+			return false;
+		}
+		if(!city.value){
+			city.placeholder = 'insira uma cidade';
+			return false;
+		}
+		if(!state.value){
+			state.placeholder = 'insira um estado';
+			return false;
+		}
+		if(!validateCep(cep.value)){
+			cep.value = '';
+			cep.placeholder = 'insira um CEP válido';
+			return false;
+		}
+		//all ok, call mercadopago
+		openMercadopago();
+	}
+	function closeAddressForm(){
+		$('#addressForm').remove();
+		$('#addressFormOverlay').remove();
+	}
+
 	loadPaypalButtons();
+	loadMercadopagoButtons();
 </script>
+
+<script>loadCart();</script>
 
 </div>
 </body>
