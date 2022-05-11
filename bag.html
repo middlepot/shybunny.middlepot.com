@@ -354,14 +354,16 @@ html {
 		document.getElementById('table-quantity').innerHTML = '';
 		document.getElementById('table-weight').innerHTML = '';
 		if(!cart_items || cart_items.length <= 0){
-			document.getElementById('tables').style.display = 'none';
-			document.getElementById('bag-state').src = 'img/bagempty.png';
-			document.getElementById('shipping-total').remove();
-			document.getElementById('buyermail').remove();
-			document.getElementById('coupon').remove();
-			document.getElementById('emailvalidator').remove();
-			document.getElementById('grand-total').remove();
-			document.getElementById('coupon-status').remove();
+			if(mercadopagostatus !== 'approved' && mercadopagostatus !== 'pending'){
+				document.getElementById('tables').style.display = 'none';
+				document.getElementById('bag-state').src = 'img/bagempty.png';
+				document.getElementById('shipping-total').remove();
+				document.getElementById('buyermail').remove();
+				document.getElementById('coupon').remove();
+				document.getElementById('emailvalidator').remove();
+				document.getElementById('grand-total').remove();
+				document.getElementById('coupon-status').remove();
+			}
 		}
 		else{
 			document.getElementById('tables').style.display = 'block';
@@ -650,7 +652,7 @@ html {
 			oldCouponCode = code;
 			var req = await fetch(api_path+'/coupon?code='+code, {method: 'GET'});
 			var res = await req.json();
-			if(res){
+			if(res && !isNaN(res) && res > 0){
 				statusEl.style.display = 'block';
 				statusEl.src = 'img/couponok.png';
 				appliedDiscount = res;
@@ -891,6 +893,7 @@ z-index: 2;" src="./img/bagtotal.png">
 	
 	var mercadopago;
 	var mercadopagoCheckout;
+	var mercadopagostatus = getQueryParam('mercadopago_status');
 	function loadMercadopagoButtons(){
 		if(loadedMercadopagoSdk){
 			
@@ -902,7 +905,6 @@ z-index: 2;" src="./img/bagtotal.png">
 			document.getElementById('notebag').src = './img/brazilnotebag.png';
 
 			//check if came redirected from mercadopago
-			var mercadopagostatus = getQueryParam('mercadopago_status');
 			if(mercadopagostatus === 'approved' || mercadopagostatus === 'pending'){
 				clearCart();
 				//show 'done' message
