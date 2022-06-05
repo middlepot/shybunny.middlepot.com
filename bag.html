@@ -106,6 +106,7 @@ html {
 #everything { position: absolute; zoom: 85%; left:-100px; top:0px;}
 }
 </style>
+
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
 <script src="js/jimp.js"></script>
 <script src="js/cookies.js"></script>
@@ -159,6 +160,7 @@ html {
 	var buyerCountry = 'unknown';
 	var gotUserLocation = false;
 	var brlConversionRate = 4; // 1 USD = 4 BRL
+	var affiliateDiscount = 0.05; //5% discount
 	async function getBuyerLocation(){
 		try{
 			var req = await fetch(api_path+'/currency', {method: 'GET'});
@@ -182,7 +184,7 @@ html {
 		head.insertBefore(scrEl, head.firstChild);
 
 		//check if must show warning
-		var shippingRestricted = ['AR', 'AU', 'NZ', 'PH'];
+		var shippingRestricted = ['ZA', 'AU', 'NZ', 'PH'];
 		if(buyerCountry === 'unknown' || shippingRestricted.includes(buyerCountry)){
 			showShippingWarning();
 		}
@@ -212,7 +214,8 @@ html {
 			clearInterval(awaitingUserLocation);
 		}
 	}, 10);
-	</script>
+</script>
+
 </head>
 
 <body ondragstart="return false" style="background-image:url(./img/bg.png); background-repeat: repeat; font-family: Calibri; font-size: 11px; letter-spacing:1px; color:#998585; white-space: nowrap;">
@@ -307,14 +310,31 @@ html {
 		shippingEl.innerHTML = (loadedMercadopagoSdk?'R':'')+'$ '+shipping.total+currency+' ( ' + shipping.mode + ' )';
 		//gets final price
 		var total = (calculateItemsPrice()+shipping.total);
-		var totalDiscounted = total*(1-(appliedDiscount/100));
+		var accumulatedDiscount = appliedDiscount/100;
+		//check if affiliate exists
+		var affCode = getQueryParam(affiliateParam);
+		var affValid = false;
+		if(affCode){
+			try{
+				var affReq = await fetch(api_path+'/order/affiliate/exists?affiliate='+affCode);
+				if(affReq.status === 200){
+					accumulatedDiscount += affiliateDiscount;
+					affValid = true;
+				}
+			}
+			catch(err){
+				console.log('could not evaluate affiliate '+affCode);
+				console.log(err);
+			}
+		}
+		var totalDiscounted = total*(1-accumulatedDiscount);
 		var totalFloat = parseFloat(total);
 		var totalDiscountedFloat = parseFloat(totalDiscounted);
 		if(totalDiscountedFloat % 1 !== 0)
 			totalDiscountedFloat = totalDiscountedFloat.toFixed(2);
 		
 		var totalEl = document.getElementById('grand-total');
-		if(!appliedDiscount || appliedDiscount <= 0){
+		if(!affValid && (!appliedDiscount || appliedDiscount <= 0)){
 			totalEl.innerHTML = (loadedMercadopagoSdk?'R':'')+'$ '+totalFloat+currency;
 			return totalFloat;
 		}
@@ -328,12 +348,12 @@ html {
 		return (!cart_items || cart_items.length <= 0)
 	}
 	
-	function removeFromCart(){
+	async function removeFromCart(){
 		var clicked = $(this).closest('td').parent()[0].sectionRowIndex;
 		if(clicked >= 0){
 			cart_items.splice(clicked, 1);
 			setCookie("cart_items", JSON.stringify(cart_items));
-			updateCart();
+			await updateCart();
 		}
 	}
 	
@@ -616,7 +636,7 @@ html {
 			tr.appendChild(td);
 			document.getElementById('table-weight').appendChild(tr);
 			//sets final price
-			calculateFinalPrice();
+			await calculateFinalPrice();
 		}
 	}
 
@@ -626,7 +646,7 @@ html {
 	}
 
 	//load cart from cookies
-	function loadCart(){
+	async function loadCart(){
 		if(!loadingSomething && (loadedMercadopagoSdk || loadedPaypalSdk)){
 			var cartCookie = getCookie("cart_items");
 			if(cartCookie){
@@ -635,7 +655,7 @@ html {
 					cart_items = cart;
 				}
 			}
-			updateCart();
+			await updateCart();
 		}
 		else{
 			setTimeout(loadCart, 50);
@@ -668,7 +688,7 @@ html {
 			statusEl.src = 'img/couponwrong.png';
 			appliedDiscount = 0;
 		}
-		calculateFinalPrice();
+		await calculateFinalPrice();
 	}
 </script>
 
@@ -810,7 +830,11 @@ z-index: 2;" src="./img/bagtotal.png">
 							headers: {
 								'Content-Type': 'application/json'
 							},
-							body: JSON.stringify({cart: catcart, coupon: code})
+							body: JSON.stringify({
+								cart: catcart,
+								coupon: code,
+								affiliate: getQueryParam(affiliateParam)
+							})
 						});
 						var resp = await priceFetch.json();
 						updatedPrice = resp.price.price;
@@ -847,6 +871,7 @@ z-index: 2;" src="./img/bagtotal.png">
 								orderId: details.id,
 								buyerMail: buyerMail,
 								coupon: usedCoupon,
+								affiliate: getQueryParam(affiliateParam),
 								items: cart_items
 							});
 
@@ -964,7 +989,8 @@ z-index: 2;" src="./img/bagtotal.png">
 						cep: cep
 					},
 					email: document.getElementById('buyermail').value,
-					coupon: document.getElementById('coupon').value
+					coupon: document.getElementById('coupon').value,
+					affiliate: getQueryParam(affiliateParam)
 				})
 			});
 			if(req.status === 200){
