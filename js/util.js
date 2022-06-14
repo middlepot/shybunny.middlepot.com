@@ -1,7 +1,7 @@
 //validations
 function validateEmail(email) {
 	var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	var test = re.test(String(email).toLowerCase());
+	var test = re.test(sanitizeEmail(String(email).toLowerCase()));
 	var mailValidatorEl = document.getElementById('emailvalidator');
 	if(mailValidatorEl){
 		if(test){
@@ -15,6 +15,14 @@ function validateEmail(email) {
 		mailValidatorEl.style.display = 'block';
 	}
 	return test;
+}
+function sanitizeEmail(val){
+	if(val){
+		//replace similar unicode characters with ascii ones
+		val = val.replace(/＠|﹫/g, '@');
+		val = val.toLowerCase();
+	}
+	return val;
 }
 function validateInt(val){
     var temp = parseInt(val);
