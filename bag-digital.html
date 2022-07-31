@@ -113,102 +113,6 @@ html {
 <script src="js/store-variables.js"></script>
 <script src="js/util.js"></script>
 <script>
-	function openDigitalConfirmation(){
-		var whiteoverlay = document.createElement('div');
-		whiteoverlay.id = 'digitalConfirmationOverlay';
-		whiteoverlay.style.position = 'fixed';
-		whiteoverlay.style.display = 'flex';
-		whiteoverlay.style.justifyContent = 'center';
-		whiteoverlay.style.alignItems = 'center';
-		whiteoverlay.style.width = '100%';
-		whiteoverlay.style.height = '100%';
-		whiteoverlay.style.top = '0';
-		whiteoverlay.style.left = '0';
-		whiteoverlay.style.background = 'rgba(255, 255, 255, 0.3)';
-		whiteoverlay.style.zIndex = '999990';
-		$(whiteoverlay).insertAfter('head');
-
-		var warning = document.createElement('img');
-		warning.id = 'digitalConfirmationMessage';
-		warning.src = './img/digital-info.png';
-		warning.style.position = 'absolute';
-		warning.style.display = 'block';
-		warning.style.top = '120px';
-		warning.style.left = '450px';
-		warning.style.zIndex = '999991';
-		$('#everything').append(warning);
-
-		var yesa = document.createElement('a');
-		yesa.id = 'digitalConfirmationConfirm';
-		yesa.href = '/bag-digital';
-		yesa.style.position = 'absolute';
-		yesa.style.display = 'block';
-		yesa.style.top = '570px';
-		yesa.style.left = '645px';
-		yesa.style.zIndex = '999992';
-		var yes = document.createElement('img');
-		yes.src = './img/yes-digital.png';
-		yesa.appendChild(yes);
-		$('#everything').append(yesa);
-
-		var close = document.createElement('img');
-		close.id = 'digitalConfirmationClose';
-		close.src = './img/bagdelete.png';
-		close.style.position = 'absolute';
-		close.style.display = 'block';
-		close.style.top = '130px';
-		close.style.left = '775px';
-		close.style.zIndex = '999992';
-		close.onclick = function(){
-			$('#digitalConfirmationOverlay')[0].remove();
-			$('#digitalConfirmationMessage')[0].remove();
-			$('#digitalConfirmationClose')[0].remove();
-			$('#digitalConfirmationConfirm')[0].remove();
-		}
-		$('#everything').append(close);
-	}
-
-	function showShippingWarning(){
-		var whiteoverlay = document.createElement('div');
-		whiteoverlay.id = 'shippingWarningOverlay';
-		whiteoverlay.style.position = 'fixed';
-		whiteoverlay.style.display = 'flex';
-		whiteoverlay.style.justifyContent = 'center';
-		whiteoverlay.style.alignItems = 'center';
-		whiteoverlay.style.width = '100%';
-		whiteoverlay.style.height = '100%';
-		whiteoverlay.style.top = '0';
-		whiteoverlay.style.left = '0';
-		whiteoverlay.style.background = 'rgba(255, 255, 255, 0.3)';
-		whiteoverlay.style.zIndex = '999990';
-		$(whiteoverlay).insertAfter('head');
-
-		var warning = document.createElement('img');
-		warning.id = 'shippingWarningMessage';
-		warning.src = './img/shippingwarning.png';
-		warning.style.position = 'absolute';
-		warning.style.display = 'block';
-		warning.style.top = '190px';
-		warning.style.left = '500px';
-		warning.style.zIndex = '999991';
-		$('#everything').append(warning);
-
-		var close = document.createElement('img');
-		close.id = 'shippingWarningClose';
-		close.src = './img/bagdelete.png';
-		close.style.position = 'absolute';
-		close.style.display = 'block';
-		close.style.top = '200px';
-		close.style.left = '720px';
-		close.style.zIndex = '999992';
-		close.onclick = function(){
-			$('#shippingWarningOverlay')[0].remove();
-			$('#shippingWarningMessage')[0].remove();
-			$('#shippingWarningClose')[0].remove();
-		}
-		$('#everything').append(close);
-	}
-
 	var loadedPaypalSdk = false;
 	var loadedMercadopagoSdk = false;
 	var buyerCurrency = 'USD';
@@ -237,12 +141,6 @@ html {
 		}
 		var head = document.head || document.getElementsByTagName("head")[0];
 		head.insertBefore(scrEl, head.firstChild);
-
-		//check if must show warning
-		var shippingRestricted = ['ZA', 'AU', 'NZ', 'PH'];
-		if(buyerCountry === 'unknown' || shippingRestricted.includes(buyerCountry)){
-			showShippingWarning();
-		}
 	}
 	async function loadMercadopagoSdk(){
 		var scrEl = document.createElement('script');
@@ -285,7 +183,7 @@ html {
 		}
 	}
 
-	//returns the weight of ithe item
+	//returns the weight of the item
 	function getItemWeight(cat){
 		for(const [CATEGORY] of Object.entries(categories)){
 			if(cat === categories[CATEGORY].CATEGORY){
@@ -298,52 +196,13 @@ html {
 	function getItemPrice(cat){
 		for(const [CATEGORY] of Object.entries(categories)){
 			if(cat === categories[CATEGORY].CATEGORY){
-				var price = categories[CATEGORY].PRICE;
+				var price = categories[CATEGORY].PRICE_DIGITAL;
 				if(loadedMercadopagoSdk)
 					price *= brlConversionRate;
 
 				return price;
 			}
 		}
-	}
-
-	//iterate over cart to evaluate shipping
-	function calculateShipping(){
-		var packagePrice = 5;
-		var packageMaxWeight = 50;
-		var finalPrice = 0;
-		var packageCount = 1;
-		var insidePackage = 0;
-		cart_items.forEach(item =>{
-			if(item){
-				for(const [ITEM] of Object.entries(categories)){
-					if(item.category === categories[ITEM].CATEGORY){
-						insidePackage += categories[ITEM].WEIGHT;
-						if(insidePackage > packageMaxWeight){
-							insidePackage = categories[ITEM].WEIGHT;
-							packageCount += 1;
-						}
-						break;
-					}
-				}
-			}
-		});
-		if(packageCount >= 5)
-			finalPrice += 30; //30usd for a box
-		else
-			finalPrice = (packagePrice*packageCount);
-		//charging in BRL
-		if(loadedMercadopagoSdk)
-			finalPrice *= brlConversionRate;
-
-		var mode = packageCount+' package';
-		if(packageCount > 1)
-			mode += 's';
-		var boxes = Math.floor(packageCount/5);
-		if(boxes > 0){
-			mode = '1 box';
-		}
-		return {total: finalPrice, mode: mode};
 	}
 
 	//iterate over cart to evaluate price
@@ -359,12 +218,8 @@ html {
 
 	async function calculateFinalPrice(){
 		var currency = (loadedPaypalSdk?' usd':' reais');
-		//sets shipping fee
-		var shipping = calculateShipping();
-		var shippingEl = document.getElementById('shipping-total');
-		shippingEl.innerHTML = (loadedMercadopagoSdk?'R':'')+'$ '+shipping.total+currency+' ( ' + shipping.mode + ' )';
 		//gets final price
-		var total = (calculateItemsPrice()+shipping.total);
+		var total = calculateItemsPrice();
 		var accumulatedDiscount = appliedDiscount/100;
 		//check if affiliate exists
 		var affCode = getQueryParam(affiliateParam);
@@ -416,23 +271,17 @@ html {
 		//pomisify jimp image creation
 		var JimpCreate = (w, h) => new Promise((resolve) => {new Jimp(w, h, function(err, img){resolve(img);})});
 		var prevEl = document.getElementById('table-preview');
-		var typeEl = document.getElementById('table-type');
 		var quantEl = document.getElementById('table-quantity');
-		var weightEl = document.getElementById('table-weight');
-		var totalWeight = 0;
 		var tr, td;
 		//clear tables
 		document.getElementById('table-remove').innerHTML = '';
 		document.getElementById('table-preview').innerHTML = '';
-		document.getElementById('table-type').innerHTML = '';
 		document.getElementById('table-price').innerHTML = '';
 		document.getElementById('table-quantity').innerHTML = '';
-		document.getElementById('table-weight').innerHTML = '';
 		if(!cart_items || cart_items.length <= 0){
 			if(mercadopagostatus !== 'approved' && mercadopagostatus !== 'pending'){
 				document.getElementById('tables').style.display = 'none';
 				document.getElementById('bag-state').src = 'img/bagempty.png';
-				document.getElementById('shipping-total').remove();
 				document.getElementById('buyermail').remove();
 				document.getElementById('coupon').remove();
 				document.getElementById('emailvalidator').remove();
@@ -442,7 +291,7 @@ html {
 		}
 		else{
 			document.getElementById('tables').style.display = 'block';
-			document.getElementById('bag-state').src = 'img/bagfull.png';
+			document.getElementById('bag-state').src = 'img/bagfull-digital.png';
 			for(var i = 0; i < cart_items.length; ++i){
 				var item = cart_items[i];
 				//remove
@@ -460,182 +309,52 @@ html {
 				var jimg;
 				var bgBoxSize = 50;
 				var baseOffset = 10;
-				switch(item.category){
-					case categories.STUFFIE.CATEGORY:{
-						//critter
-						var jimg, jbody, jhead, jarm;
-						var jimgprom = JimpCreate(300, 340).then(img => jimg = img);
-						var bodyprom = Jimp.read(critters[critterType].BODY).then(img => jbody = img);
-						var armprom = Jimp.read(critters[critterType].ARMS[item.variation]).then(img => jarm = img);
-						var headprom = Jimp.read(critters[critterType].HEAD).then(img => jhead = img);
-						await Promise.all([jimgprom, bodyprom, headprom, armprom]);
-						//makes critter
-						jimg.composite(jbody, baseOffset, baseOffset);
-						if(item.accessory >= 0 && item.accessory < critters[critterType].ACCESSORIES.length){
-							//load accessory
-							var acc = critters[critterType].ACCESSORIES[item.accessory];
-							var jacc = await Jimp.read(acc.IMG);
-							//if arm is behind accessory
-							if(!critters[critterType].ACCESSORIES[item.accessory].BEHIND_ARMS[item.variation]){
-								if(item.variation === 2) //this arm is above face
-									jimg.composite(jhead, baseOffset, baseOffset);
-								jimg.composite(jarm, baseOffset, baseOffset);
-								if(item.variation < 2) //this arm is below face
-									jimg.composite(jhead, baseOffset, baseOffset);
-								//accessory
-								jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
-							}
-							else{
-								//arm above accessory
-								if(item.variation === 2){ //this arm is above face
-									jimg.composite(jhead, baseOffset, baseOffset);
-									jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
-								}
-								jimg.composite(jarm, baseOffset, baseOffset);
-								if(item.variation < 2){ //this arm is below face
-									jimg.composite(jhead, baseOffset, baseOffset);
-									jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
-								}
-							}
-						}
-						else{
-							//there are no accessories
-							if(item.variation === 2) //this arm is above face
-								jimg.composite(jhead, baseOffset, baseOffset);
-							jimg.composite(jarm, baseOffset, baseOffset);
-							if(item.variation < 2) //this arm is below face
-								jimg.composite(jhead, baseOffset, baseOffset);
-						}
-						jimg.autocrop();
-						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
-
-						break;
+				//critter
+				var jimg, jbody, jhead, jarm;
+				var jimgprom = JimpCreate(300, 340).then(img => jimg = img);
+				var bodyprom = Jimp.read(critters[critterType].BODY).then(img => jbody = img);
+				var armprom = Jimp.read(critters[critterType].ARMS[item.variation]).then(img => jarm = img);
+				var headprom = Jimp.read(critters[critterType].HEAD).then(img => jhead = img);
+				await Promise.all([jimgprom, bodyprom, headprom, armprom]);
+				//makes critter
+				jimg.composite(jbody, baseOffset, baseOffset);
+				if(item.accessory >= 0 && item.accessory < critters[critterType].ACCESSORIES.length){
+					//load accessory
+					var acc = critters[critterType].ACCESSORIES[item.accessory];
+					var jacc = await Jimp.read(acc.IMG);
+					//if arm is behind accessory
+					if(!critters[critterType].ACCESSORIES[item.accessory].BEHIND_ARMS[item.variation]){
+						if(item.variation === 2) //this arm is above face
+							jimg.composite(jhead, baseOffset, baseOffset);
+						jimg.composite(jarm, baseOffset, baseOffset);
+						if(item.variation < 2) //this arm is below face
+							jimg.composite(jhead, baseOffset, baseOffset);
+						//accessory
+						jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
 					}
-					case categories.PIN.CATEGORY:{
-						//critter
-						var jimg, jcrit;
-						var jimgprom = JimpCreate(300, 400).then(img => jimg = img);
-						var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
-						await Promise.all([jimgprom, imgprom]);
-						if(item.accessory >= 0 && item.accessory < critters[critterType].ACCESSORIES.length){
-							var acc = critters[critterType].ACCESSORIES[item.accessory];
-							var jacc = await Jimp.read(acc.IMG);
-							jcrit.composite(jacc, acc.POSX, acc.POSY);
+					else{
+						//arm above accessory
+						if(item.variation === 2){ //this arm is above face
+							jimg.composite(jhead, baseOffset, baseOffset);
+							jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
 						}
-						//adds critter to preview
-						jimg.composite(jcrit, baseOffset, baseOffset);
-						jimg.autocrop();
-						jimg.scaleToFit(bgBoxSize*0.65, bgBoxSize*0.65);
-
-						break;
-					}
-					case categories.CHARM.CATEGORY:{
-						//critter
-						var jimg, jcrit, jbase, jbody, jhead, jarm;
-						var baseprom = Jimp.read('img/charmbase.png').then(img => jbase = img);
-						var jimgprom = JimpCreate(300, 340).then(img => jimg = img);
-						var critprom = JimpCreate(300, 340).then(img => jcrit = img);
-						var bodyprom = Jimp.read(critters[critterType].BODY).then(img => jbody = img);
-						var armprom = Jimp.read(critters[critterType].ARMS[item.variation]).then(img => jarm = img);
-						var headprom = Jimp.read(critters[critterType].HEAD).then(img => jhead = img);
-						await Promise.all([jimgprom, critprom, baseprom, bodyprom, headprom, armprom]);
-						//makes critter
-						jcrit.composite(jbody, baseOffset, baseOffset);
-						if(item.accessory >= 0 && item.accessory < critters[critterType].ACCESSORIES.length){
-							//load accessory
-							var acc = critters[critterType].ACCESSORIES[item.accessory];
-							var jacc = await Jimp.read(acc.IMG);
-							//if arm is behind accessory
-							if(!critters[critterType].ACCESSORIES[item.accessory].BEHIND_ARMS[item.variation]){
-								if(item.variation === 2) //this arm is above face
-									jcrit.composite(jhead, baseOffset, baseOffset);
-								jcrit.composite(jarm, baseOffset, baseOffset);
-								if(item.variation < 2) //this arm is below face
-									jcrit.composite(jhead, baseOffset, baseOffset);
-								//accessory
-								jcrit.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
-							}
-							else{
-								//arm above accessory
-								if(item.variation === 2){ //this arm is above face
-									jcrit.composite(jhead, baseOffset, baseOffset);
-									jcrit.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
-								}
-								jcrit.composite(jarm, baseOffset, baseOffset);
-								if(item.variation < 2){ //this arm is below face
-									jcrit.composite(jhead, baseOffset, baseOffset);
-									jcrit.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
-								}
-							}
+						jimg.composite(jarm, baseOffset, baseOffset);
+						if(item.variation < 2){ //this arm is below face
+							jimg.composite(jhead, baseOffset, baseOffset);
+							jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
 						}
-						else{
-							//there are no accessories
-							if(item.variation === 2) //this arm is above face
-								jcrit.composite(jhead, baseOffset, baseOffset);
-							jcrit.composite(jarm, baseOffset, baseOffset);
-							if(item.variation < 2) //this arm is below face
-								jcrit.composite(jhead, baseOffset, baseOffset);
-						}
-						//adds critter to preview
-						jbase.resize(Jimp.AUTO, categories.CHARM.PREVIEW.BASE.HEIGHT);
-						jcrit.resize(Jimp.AUTO, categories.CHARM.PREVIEW.HEIGHT);
-						jcrit.autocrop();
-						jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, baseOffset);
-						jimg.composite(jcrit, jimg.bitmap.width/2-jcrit.bitmap.width/2, baseOffset+jbase.bitmap.height-40);
-						jimg.autocrop();
-						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
-
-						break;
-					}
-					case categories.EARRING.CATEGORY:{
-						//critter
-						var jimg, jbase, jcrit;
-						var jimgprom = JimpCreate(300, 400).then(img => jimg = img);
-						var baseprom = Jimp.read('img/earringbase.png').then(img => jbase = img);
-						var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
-						await Promise.all([jimgprom, baseprom, imgprom]);
-						if(item.choker_accessory >= 0 && item.choker_accessory < critters[critterType].CHOKER_ACCESSORIES.length){
-							var acc = critters[critterType].CHOKER_ACCESSORIES[item.choker_accessory];
-							var jacc = await Jimp.read(acc.IMG);
-							jcrit.composite(jacc, acc.POSX, acc.POSY);
-						}
-						//adds critter to preview
-						jcrit.resize(Jimp.AUTO, categories.EARRING.PREVIEW.HEIGHT);
-						jbase.resize(Jimp.AUTO, categories.EARRING.PREVIEW.BASE.HEIGHT);
-						var offx1 = 10;
-						jimg.composite(jbase, baseOffset+offx1, baseOffset);
-						jimg.composite(jcrit, baseOffset+categories.EARRING.PREVIEW.LEFT-jcrit.bitmap.width/2, baseOffset+categories.EARRING.PREVIEW.TOP);
-						var offx2 = 80;
-						jimg.composite(jbase, baseOffset+offx2, baseOffset);
-						jimg.composite(jcrit, baseOffset+offx2-offx1+categories.EARRING.PREVIEW.LEFT-jcrit.bitmap.width/2, baseOffset+categories.EARRING.PREVIEW.TOP);
-						jimg.autocrop();
-						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
-
-						break;
-					}
-					case categories.CHOKER.CATEGORY:{
-						//critter
-						var jbase, jcrit;
-						var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
-						var baseprom = Jimp.read(chokers[item.choker_variation]).then(img => jbase = img);
-						var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
-						await Promise.all([jimgprom, baseprom, imgprom]);
-						if(item.choker_accessory >= 0 && item.choker_accessory < critters[critterType].CHOKER_ACCESSORIES.length){
-							var acc = critters[critterType].CHOKER_ACCESSORIES[item.choker_accessory];
-							var jacc = await Jimp.read(acc.IMG);
-							jcrit.composite(jacc, acc.POSX, acc.POSY);
-						}
-						//adds critter to preview
-						jcrit.resize(Jimp.AUTO, categories.CHOKER.PREVIEW.HEIGHT);
-						jbase.resize(categories.CHOKER.PREVIEW.BASE.WIDTH, Jimp.AUTO);
-						jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, 20);
-						jimg.composite(jcrit, categories.CHOKER.PREVIEW.LEFT-jcrit.bitmap.width/2, categories.CHOKER.PREVIEW.TOP);
-						jimg.autocrop();
-						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
-
-						break;
 					}
 				}
+				else{
+					//there are no accessories
+					if(item.variation === 2) //this arm is above face
+						jimg.composite(jhead, baseOffset, baseOffset);
+					jimg.composite(jarm, baseOffset, baseOffset);
+					if(item.variation < 2) //this arm is below face
+						jimg.composite(jhead, baseOffset, baseOffset);
+				}
+				jimg.autocrop();
+				jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
 				//applies bg and converts to base64
 				var bg = await Jimp.read('img/bagbox.png');
 				bg.composite(jimg, bg.bitmap.width/2-jimg.bitmap.width/2, (bg.bitmap.height-jimg.bitmap.height)/2);
@@ -650,12 +369,6 @@ html {
 					tr.appendChild(td);
 					document.getElementById('table-preview').appendChild(tr);
 				});
-				//type
-				tr = document.createElement('tr');
-				td = document.createElement('td');
-				td.innerHTML = item.category;
-				tr.appendChild(td);
-				document.getElementById('table-type').appendChild(tr);
 				//price
 				tr = document.createElement('tr');
 				td = document.createElement('td');
@@ -668,28 +381,7 @@ html {
 				td.innerHTML = 1;
 				tr.appendChild(td);
 				document.getElementById('table-quantity').appendChild(tr);
-				//weight
-				tr = document.createElement('tr');
-				td = document.createElement('td');
-				var w = getItemWeight(item.category);
-				if(!isNaN(w) && isFinite(w)){
-					td.innerHTML = w+'g';
-					totalWeight += w;
-				}
-				tr.appendChild(td);
-				document.getElementById('table-weight').appendChild(tr);
 			}
-			//total weight
-			tr = document.createElement('tr');
-			td = document.createElement('td');
-			td.innerHTML = '<b>total weight :</b>';
-			tr.appendChild(td);
-			document.getElementById('table-quantity').appendChild(tr);
-			tr = document.createElement('tr');
-			td = document.createElement('td');
-			td.innerHTML = '<b>'+totalWeight+'g</b>';
-			tr.appendChild(td);
-			document.getElementById('table-weight').appendChild(tr);
 			//sets final price
 			await calculateFinalPrice();
 		}
@@ -752,7 +444,7 @@ html {
 	top: 20px;
 overflow-y:hidden;
 overflow-x:hidden;
-z-index: 1;" src="./img/shoppingbag.png">
+z-index: 1;" src="./img/digitalbag.png">
 
 <a href="/policies">
 <img style="position: absolute;
@@ -770,20 +462,12 @@ overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/homeleft.png"></a>
 
-<a>
-<img style="position: absolute;
-	left: 815px;
-	top: 380px;
-overflow-y:hidden;
-overflow-x:hidden;
-z-index: 2;" src="./img/digital-button.png" onclick="openDigitalConfirmation();"></a>
-
 <img id="bag-state" style="position: absolute;
 	left: 475px;
 	top: 165px;
 overflow-y:hidden;
 overflow-x:hidden;
-z-index: 2;" src="./img/bagfull.png">
+z-index: 2;" src="./img/bagfull-digital.png">
 
 <div id="tables" style="position: absolute; left: 450px; top: 190px;
 overflow: auto; overflow: scroll; z-index: 5; width:370px; height:175px;
@@ -795,16 +479,13 @@ font-size: 11px; letter-spacing:1px; line-height:20px;">
 	<div style="display: flex;">
 		<table id="table-remove" style="position: relative;"></table>
 		<table id="table-preview" style="position: relative;"></table>
-		<table id="table-type" style="position: relative;"></table>
-		<table id="table-quantity" style="position: relative;"></table>
-		<table id="table-price" style="position: relative; left: 10px;"></table>
-		<table id="table-weight" style="position: relative; left: 55px;"></table>
+		<table id="table-quantity" style="position: relative; left: 30px;"></table>
+		<table id="table-price" style="position: relative; left: 72px;"></table>
 	</div>
 </div>
 
 </div>
 
-<p id="shipping-total" style="font-size: 10pt; font-weight: bold; text-align: right; position: absolute; top: 350px; left: 625px; z-index: 20;"></p>
 <p id="grand-total" style="font-size: 11pt; font-weight: bold; text-align: right; position: absolute; top: 475px; left: 530px; z-index: 20;"></p>
 
 <style>
@@ -848,7 +529,7 @@ z-index: 2;" src="./img/bagtotal.png">
 	<div class="hoverable" id="card-button-container" style="margin-top: 5px;"></div>
 </div>
 <div id="mercadopago-container" style="display: none;">
-	<a><img src="./img/brazilcheckout.png" id="mercadopago-button" onclick="openAddressForm();" style="position: absolute; z-index: 4; top: 529px; left: 489px;"></a>
+	<a><img src="./img/brazilcheckout.png" id="mercadopago-button" onclick="openMercadopago();" style="position: absolute; z-index: 4; top: 529px; left: 489px;"></a>
 </div>
 <script>
 	var paypalButtons = [];
@@ -888,7 +569,7 @@ z-index: 2;" src="./img/bagtotal.png">
 							catcart.push(item.category);
 						});
 						var code = document.getElementById('coupon').value;
-						var priceFetch = await fetch(api_path+'/order/price', {
+						var priceFetch = await fetch(api_path+'/order/price?digital=true', {
 							method: 'POST',
 							headers: {
 								'Content-Type': 'application/json'
@@ -940,15 +621,14 @@ z-index: 2;" src="./img/bagtotal.png">
 
 							//change page layout
 							document.getElementById('tables').style.display = 'none';
-							document.getElementById('bag-state').src = 'img/bagdone.png';
-							document.getElementById('shipping-total').remove();
+							document.getElementById('bag-state').src = 'img/bagdone-digital.png';
 							document.getElementById('buyermail').remove();
 							document.getElementById('coupon').remove();
 							document.getElementById('emailvalidator').remove();
 							document.getElementById('grand-total').remove();
 							document.getElementById('coupon-status').remove();
 
-							return fetch(api_path+'/order', {
+							return fetch(api_path+'/order/digital', {
 								method: 'POST',
 								cache: 'no-cache',
 								headers:{
@@ -997,8 +677,7 @@ z-index: 2;" src="./img/bagtotal.png">
 				clearCart();
 				//show 'done' message
 				document.getElementById('tables').style.display = 'none';
-				document.getElementById('bag-state').src = 'img/bagdone.png';
-				document.getElementById('shipping-total').remove();
+				document.getElementById('bag-state').src = 'img/bagdone-digital.png';
 				document.getElementById('buyermail').remove();
 				document.getElementById('coupon').remove();
 				document.getElementById('emailvalidator').remove();
@@ -1016,6 +695,14 @@ z-index: 2;" src="./img/bagtotal.png">
 		}
 	}
 	async function openMercadopago(){
+
+		var buyerMailEl = document.getElementById('buyermail');
+		var buyerMail = buyerMailEl.value;
+		if(!validateEmail(buyerMail)){
+			//invalid email
+			buyerMailEl.value = '';
+			return false;
+		}
 		
 		showLoadingOverlay();
 
@@ -1024,17 +711,11 @@ z-index: 2;" src="./img/bagtotal.png">
 		cart_items.forEach(item =>{
 			catcart.push(item.category);
 		});
-		var name = document.getElementById('addressform-name').value;
-		var street = document.getElementById('addressform-street').value;
-		var number = document.getElementById('addressform-number').value;
-		var compl = document.getElementById('addressform-compl').value;
-		var city = document.getElementById('addressform-city').value;
-		var state = document.getElementById('addressform-state').value;
-		var cep = document.getElementById('addressform-cep').value;
+
 		//init checkout
 		var prefId;
 		try{
-			var req = await fetch(api_path+'/order/mercadopago/preference/create',{
+			var req = await fetch(api_path+'/order/mercadopago/preference/create?digital=true',{
 				method: 'POST',
 				headers:{
 					'content-type': 'application/json'
@@ -1042,15 +723,6 @@ z-index: 2;" src="./img/bagtotal.png">
 				body: JSON.stringify({
 					cart: catcart,
 					rawcart: cart_items,
-					address:{
-						name: name,
-						street: street,
-						number: number,
-						compl: compl,
-						city: city,
-						state: state,
-						cep: cep
-					},
 					email: document.getElementById('buyermail').value,
 					coupon: document.getElementById('coupon').value,
 					affiliate: getQueryParam(affiliateParam)
@@ -1072,114 +744,6 @@ z-index: 2;" src="./img/bagtotal.png">
 			console.log(err);
 		}
 		hideLoadingOverlay();
-	}
-	
-	function openAddressForm(){
-		if(cartIsEmpty()){
-			return false;
-		}
-		//validate buyer email
-		var buyerMailEl = document.getElementById('buyermail');
-		var buyerMail = buyerMailEl.value;
-		if(!validateEmail(buyerMail)){
-			buyerMailEl.value = '';
-			return false;
-		}
-		//show address form
-		var addressFormOverlay = $.parseHTML(`<div id="addressFormOverlay"
-		style="position:fixed; display:flex; justify-content:center; align-items:center; width:100%;
-		height:100%; top: 0; left: 0; background:#fff; opacity:0.3; z-index:999997">`);
-		$(addressFormOverlay).insertAfter('head');
-		var addressFormFields = $.parseHTML(`
-		<div id="addressForm">
-			<img id="addressform" style="position: absolute; left: 500px; top: 190px; overflow-y:hidden; overflow-x:hidden; z-index: 999998;" src="./img/address-brazil.png">
-			
-			<input id="addressform-name" style="position: absolute; left: 540px; top: 242px;
-			overflow: hidden; z-index: 999999; width: 190px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
-
-			<input id="addressform-street" style="position: absolute; left: 540px; top: 285px;
-			overflow: hidden; z-index: 999999; width: 190px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
-
-			<input id="addressform-number" style="position: absolute; left: 540px; top: 330px;
-			overflow: hidden; z-index: 999999; width: 80px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
-
-			<input id="addressform-compl" style="position: absolute; left: 645px; top: 330px;
-			overflow: hidden; z-index: 999999; width: 80px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
-
-			<input id="addressform-city" style="position: absolute; left: 540px; top: 375px;
-			overflow: hidden; z-index: 999999; width: 190px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
-
-			<input id="addressform-state" style="position: absolute; left: 540px; top: 420px;
-			overflow: hidden; z-index: 999999; width: 95px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
-
-			<input id="addressform-cep" inputmode="numeric" pattern="\d*" style="position: absolute; left: 540px; top: 462px;
-			overflow: hidden; z-index: 999999; width: 95px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
-
-			<a><img src="./img/bagdelete.png" style="z-index: 999999; position: absolute; left: 715px; top: 197px;" onclick="closeAddressForm();"></a>
-			<a><img src="./img/ok-address.png" style="z-index: 999999; position: absolute; left: 660px; top: 410px;" onclick="confirmAddressForm();"></a>
-		</div>`);
-		$('#everything').append(addressFormFields);
-	}
-	function confirmAddressForm(){
-		var name = document.getElementById('addressform-name');
-		var street = document.getElementById('addressform-street');
-		var number = document.getElementById('addressform-number');
-		var city = document.getElementById('addressform-city');
-		var state = document.getElementById('addressform-state');
-		var cep = document.getElementById('addressform-cep');
-		if(!name.value){
-			name.placeholder = 'insira um nome';
-			return false;
-		}
-		if(!street.value){
-			street.placeholder = 'insira uma rua';
-			return false;
-		}
-		if(!validateInt(number.value)){
-			number.value = '';
-			number.placeholder = 'insira um número válido';
-			return false;
-		}
-		if(!city.value){
-			city.placeholder = 'insira uma cidade';
-			return false;
-		}
-		if(!state.value){
-			state.placeholder = 'insira um estado';
-			return false;
-		}
-		if(!validateCep(cep.value)){
-			cep.value = '';
-			cep.placeholder = 'insira um CEP válido';
-			return false;
-		}
-		//all ok, call mercadopago
-		openMercadopago();
-	}
-	function closeAddressForm(){
-		$('#addressForm').remove();
-		$('#addressFormOverlay').remove();
 	}
 
 	loadPaypalButtons();
