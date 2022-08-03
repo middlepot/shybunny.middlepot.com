@@ -85,9 +85,20 @@ html {
 }
 
 @supports not (-webkit-touch-callout: none) {
+@media screen and (max-width: 1000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 85%; left:-100px; top:0px;}
+}}
+
+@supports not (-webkit-touch-callout: none) {
 @media screen and (max-width: 1000px) and (orientation: portrait){
 #everything { position: absolute; zoom: 255%;
 	left:-350px; top:70px;}
+}}
+
+
+@supports (-webkit-touch-callout: none) {
+@media screen and (max-width: 1000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 85%; left:-100px; top:0px;}
 }}
 
 @supports (-webkit-touch-callout: none) {
@@ -96,15 +107,38 @@ html {
 html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 }}
 
+
+@supports (-webkit-touch-callout: none) {
 @media screen and (min-width: 1700px) and (orientation: landscape){
 #everything { position: absolute; zoom: 120%;
 	left:150px;
 	top:40px; }
-}
+}}
+
+@supports not (-webkit-touch-callout: none) {
+@media screen and (min-width: 1700px) and (orientation: landscape){
+#everything { position: absolute; zoom: 120%;
+	left:150px;
+	top:40px; }
+}}
+
+@supports not (-webkit-touch-callout: none) {
 @media screen and (min-width: 2000px) and (orientation: landscape){
 #everything { position: absolute; zoom: 100%;
 	left:-150px; top:10px;}
-}
+}}
+
+@supports (-webkit-touch-callout: none) {
+@media screen and (min-width: 2000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 100%;
+	left:-150px; top:10px;}
+}}
+
+@supports not (-webkit-touch-callout: none) {
+@media screen and (max-width: 2000px) and (orientation: portrait){
+#everything { position: absolute; zoom: 160%;
+	left:-350px; top:20px;}
+}}
 
 @supports (-webkit-touch-callout: none) {
 @media screen and (max-width: 2000px) and (orientation: portrait){
@@ -113,14 +147,19 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 }}
 
+@supports not (-webkit-touch-callout: none) {
 @media screen and (min-width: 3000px) and (orientation: landscape){
 #everything { position: absolute; zoom: 240%;
 	left:150px;
 	top:40px; }
-}
-@media screen and (max-width: 1000px) and (orientation: landscape){
-#everything { position: absolute; zoom: 85%; left:-100px; top:0px;}
-}
+}}
+
+@supports (-webkit-touch-callout: none) {
+@media screen and (min-width: 3000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 240%;
+	left:150px;
+	top:40px; }
+}}
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
