@@ -88,22 +88,21 @@ html {
 @media screen and (max-width: 1000px) and (orientation: landscape){
 #everything { position: absolute; zoom: 85%; left:-100px; top:0px;}
 }}
+@supports (-webkit-touch-callout: none) {
+@media screen and (max-width: 1000px) and (orientation: landscape){
+#everything { position: absolute; zoom: 85%; left:-100px; top:0px;}
+}}
+
 
 @supports not (-webkit-touch-callout: none) {
 @media screen and (max-width: 1000px) and (orientation: portrait){
 #everything { position: absolute; zoom: 255%;
 	left:-350px; top:70px;}
 }}
-
-
-@supports (-webkit-touch-callout: none) {
-@media screen and (max-width: 1000px) and (orientation: landscape){
-#everything { position: absolute; zoom: 85%; left:-100px; top:0px;}
-}}
-
 @supports (-webkit-touch-callout: none) {
 @media screen and (max-width: 1000px) and (orientation: portrait){
 #everything { position: absolute; zoom: 160%;
+	left:-350px; top:20px;}
 html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 }}
 
@@ -114,7 +113,6 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 	left:150px;
 	top:40px; }
 }}
-
 @supports not (-webkit-touch-callout: none) {
 @media screen and (min-width: 1700px) and (orientation: landscape){
 #everything { position: absolute; zoom: 120%;
@@ -122,30 +120,31 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 	top:40px; }
 }}
 
+
 @supports not (-webkit-touch-callout: none) {
 @media screen and (min-width: 2000px) and (orientation: landscape){
 #everything { position: absolute; zoom: 100%;
 	left:-150px; top:10px;}
 }}
-
 @supports (-webkit-touch-callout: none) {
 @media screen and (min-width: 2000px) and (orientation: landscape){
 #everything { position: absolute; zoom: 100%;
 	left:-150px; top:10px;}
 }}
 
+
 @supports not (-webkit-touch-callout: none) {
 @media screen and (max-width: 2000px) and (orientation: portrait){
 #everything { position: absolute; zoom: 160%;
 	left:-350px; top:20px;}
 }}
-
 @supports (-webkit-touch-callout: none) {
 @media screen and (max-width: 2000px) and (orientation: portrait){
 #everything { position: absolute; zoom: 160%;
 	left:-350px; top:20px;}
 html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 }}
+
 
 @supports not (-webkit-touch-callout: none) {
 @media screen and (min-width: 3000px) and (orientation: landscape){
@@ -153,7 +152,6 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 	left:150px;
 	top:40px; }
 }}
-
 @supports (-webkit-touch-callout: none) {
 @media screen and (min-width: 3000px) and (orientation: landscape){
 #everything { position: absolute; zoom: 240%;
