@@ -148,6 +148,7 @@ z-index: 2;" src="./img/homeleft.png"></a>
 overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/contactform.png">
+<p style="display: none; position: absolute; top: 310px; left: 540px; z-index: 3; width: 200px;" id="invalid_email">please enter a valid email !</p>
 
 <a><img id="send" style="position: absolute;
 	left: 720px;
@@ -160,6 +161,11 @@ z-index: 3;" src="./img/sendbutton.png" onclick="sendForm();"></a>
 	function sendForm(){
 		var name = document.getElementById('name');
 		var email = document.getElementById('email');
+		document.getElementById('invalid_email').style.display = 'none';
+		if(!validateEmail(email.value)){
+			document.getElementById('invalid_email').style.display = 'block';
+			return;
+		}
 		var message = document.getElementById('message');
 		fetch(api_path+'/form', {
 			method: 'POST',
@@ -179,13 +185,13 @@ z-index: 3;" src="./img/sendbutton.png" onclick="sendForm();"></a>
 overflow: hidden; z-index: 5; width:200px; height:20px;
 background: transparent; resize: none; padding:5px; outline:none;
 border: 0px; cursor: url(./img/cursorwrite.png), progress; color: #9e8e8e;
-font-family: Calibri; font-size: 11px; letter-spacing:1px; line-height:15px;"></textarea>
+font-family: Calibri; font-size: 11px; letter-spacing:1px; line-height:15px;"></input>
 
 <input id="email" maxlength="50" style="position: absolute; left: 530px; top: 290px;
 overflow: hidden; z-index: 5; width:200px; height:20px;
 background: transparent; resize: none; padding:5px; outline:none;
 border: 0px; cursor: url(./img/cursorwrite.png), progress; color: #9e8e8e;
-font-family: Calibri; font-size: 11px; letter-spacing:1px; line-height:15px;"></textarea>
+font-family: Calibri; font-size: 11px; letter-spacing:1px; line-height:15px;"></input>
 
 <textarea id="message" maxlength="2000" style="position: absolute; left: 485px; top: 345px;
 overflow: auto; overflow: scroll; z-index: 5; width:260px; height:175px;
