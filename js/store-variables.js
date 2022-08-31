@@ -26,7 +26,15 @@ var currentAccessory = -1;
 var currentCategory = '';
 var currentChokerVariation = 0;
 var currentChokerAccessory = -1;
+var currentHeadbandVariation = 0;
+var currentHeadbandAccessory = -1;
+var currentHairclipVariation = 0;
+var currentHairclipAccessory = -1;
 var loadingSomething = false;
+//base images
+var chokers = ['img/chokerbase1.png', 'img/chokerbase2.png', 'img/chokerbase3.png'];
+var headbands = ['img/headbandbase1.png', 'img/headbandbase2.png', 'img/headbandbase3.png', 'img/headbandbase4.png'];
+var hairclips = ['img/hairclipbase1.png', 'img/hairclipbase2.png', 'img/hairclipbase3.png', 'img/hairclipbase4.png'];
 async function initStore(){
     loadingSomething = true;
     var info = await fetch(api_path+'/items/info', {method: 'GET'});
@@ -140,6 +148,26 @@ async function initStore(){
                 IMG: base_path+'/bunny/bunny_acc2_choker_p.png',
                 POSX: 0,
                 POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/bunny/bunny_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/bunny/bunny_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/bunny/bunny_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/bunny/bunny_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
             }]
         },
         CHICK: {
@@ -246,6 +274,26 @@ async function initStore(){
                 IMG: base_path+'/chick/chick_acc2_choker_p.png',
                 POSX: 0,
                 POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/chick/chick_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/chick/chick_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/chick/chick_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/chick/chick_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
             }]
         },
         COW: {
@@ -338,6 +386,26 @@ async function initStore(){
             },
             {
                 IMG: base_path+'/cow/cow_acc2_choker_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/cow/cow_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/cow/cow_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/cow/cow_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/cow/cow_acc1_hairclip_p.png',
                 POSX: 0,
                 POSY: 0
             }]
@@ -446,6 +514,26 @@ async function initStore(){
                 IMG: base_path+'/duck/duck_acc2_choker_p.png',
                 POSX: 0,
                 POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/duck/duck_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/duck/duck_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/duck/duck_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/duck/duck_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
             }]
         },
         FROG: {
@@ -526,6 +614,26 @@ async function initStore(){
             },
             {
                 IMG: base_path+'/frog/frog_acc2_choker_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/frog/frog_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/frog/frog_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/frog/frog_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/frog/frog_acc1_hairclip_p.png',
                 POSX: 0,
                 POSY: 0
             }]
@@ -634,6 +742,26 @@ async function initStore(){
                 IMG: base_path+'/kitty/kitty_acc2_choker_p.png',
                 POSX: 0,
                 POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/kitty/kitty_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/kitty/kitty_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/kitty/kitty_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/kitty/kitty_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
             }]
         },
         LAMB: {
@@ -726,6 +854,26 @@ async function initStore(){
             },
             {
                 IMG: base_path+'/lamb/lamb_acc2_choker_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/lamb/lamb_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/lamb/lamb_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/lamb/lamb_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/lamb/lamb_acc1_hairclip_p.png',
                 POSX: 0,
                 POSY: 0
             }]
@@ -834,6 +982,26 @@ async function initStore(){
                 IMG: base_path+'/puppy/puppy_acc2_choker_p.png',
                 POSX: 0,
                 POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/puppy/puppy_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/puppy/puppy_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/puppy/puppy_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/puppy/puppy_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
             }]
         },
         PUPPY2: {
@@ -938,6 +1106,26 @@ async function initStore(){
             },
             {
                 IMG: base_path+'/puppy2/puppy2_acc2_choker_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/puppy2/puppy2_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/puppy2/puppy2_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/puppy2/puppy2_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/puppy2/puppy2_acc1_hairclip_p.png',
                 POSX: 0,
                 POSY: 0
             }]
@@ -1046,6 +1234,26 @@ async function initStore(){
                 IMG: base_path+'/teddy/teddy_acc2_choker_p.png',
                 POSX: 0,
                 POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/teddy/teddy_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/teddy/teddy_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/teddy/teddy_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/teddy/teddy_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
             }]
         },
         TEDDY2: {
@@ -1152,12 +1360,29 @@ async function initStore(){
                 IMG: base_path+'/teddy2/teddy2_acc2_choker_p.png',
                 POSX: 0,
                 POSY: 0
+            }],
+            HEADBAND_ACCESSORIES:[{
+                IMG: base_path+'/teddy2/teddy2_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/teddy2/teddy2_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
+            }],
+            HAIRCLIP_ACCESSORIES:[{
+                IMG: base_path+'/teddy2/teddy2_acc1_hairclip_w.png',
+                POSX: 0,
+                POSY: 0
+            },
+            {
+                IMG: base_path+'/teddy2/teddy2_acc1_hairclip_p.png',
+                POSX: 0,
+                POSY: 0
             }]
         },
     }
-    
-    //choker images
-    chokers = ['img/chokerbase1.png', 'img/chokerbase2.png', 'img/chokerbase3.png'];
     
     //inject positions
     categories.STUFFIE.PREVIEW = {
@@ -1277,6 +1502,100 @@ async function initStore(){
                 DISPLAY: 'block',
                 POSX: 560,
                 POSY: 190
+            }
+        }
+    }
+    categories.HEADBAND.PREVIEW = {
+        HEIGHT: 80, //width is auto
+        TOP: 70, //relative to base
+        LEFT: 140, //relative to base,
+        RULER:{
+            TOP: 310,
+            LEFT: 530
+        },
+        BASE:{
+            TOP: 240,
+            LEFT: 420,
+            WIDTH: 240
+        },
+        BUTTONS:{
+            VARIATIONS:{
+                DISPLAY: 'block',
+                POSX: 430,
+                POSY: 190
+            },
+            ACCESSORIES:{
+                DISPLAY: 'block',
+                POSX: 530,
+                POSY: 190
+            }
+        }
+    }
+    categories.HAIRCLIP.PREVIEW = {
+        HEIGHT: 120, //width is auto
+        TOP: 43, //relative to base
+        LEFT: 250, //relative to base,
+        RULER:{
+            TOP: 260,
+            LEFT: 400
+        },
+        BASE:{
+            TOP: 240,
+            LEFT: 480,
+            WIDTH: 240
+        },
+        BUTTONS:{
+            VARIATIONS:{
+                DISPLAY: 'block',
+                POSX: 430,
+                POSY: 190
+            },
+            ACCESSORIES:{
+                DISPLAY: 'block',
+                POSX: 530,
+                POSY: 190
+            }
+        }
+    }
+    categories.MAGNET.PREVIEW = {
+        HEIGHT: 225, //width is auto
+        TOP: 220, //relative to base
+        LEFT: 500, //relative to base
+        RULER:{
+            TOP: 220,
+            LEFT: 400
+        },
+        BUTTONS:{
+            VARIATIONS:{
+                DISPLAY: 'block',
+                POSX: 580,
+                POSY: 300
+            },
+            ACCESSORIES:{
+                DISPLAY: 'block',
+                POSX: 580,
+                POSY: 205
+            }
+        }
+    }
+    categories.MINIPIN.PREVIEW = {
+        HEIGHT: 150, //width is auto
+        TOP: 260, //relative to base
+        LEFT: 555, //relative to base
+        RULER:{
+            TOP: 255,
+            LEFT: 410
+        },
+        BUTTONS:{
+            VARIATIONS:{
+                DISPLAY: 'none',
+                POSX: 580,
+                POSY: 300
+            },
+            ACCESSORIES:{
+                DISPLAY: 'block',
+                POSX: 580,
+                POSY: 205
             }
         }
     }

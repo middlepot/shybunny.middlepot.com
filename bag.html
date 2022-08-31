@@ -658,6 +658,123 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 
 						break;
 					}
+					case categories.HEADBAND.CATEGORY:{
+						//critter
+						var jbase, jcrit;
+						var headPath = (critters[critterType].HEAD.split('.')[0]+'_30o.png');
+						var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
+						var baseprom = Jimp.read(headbands[item.headband_variation]).then(img => jbase = img);
+						var imgprom = Jimp.read(headPath).then(img => jcrit = img);
+						await Promise.all([jimgprom, baseprom, imgprom]);
+						if(item.headband_accessory >= 0 && item.headband_accessory < critters[critterType].HEADBAND_ACCESSORIES.length){
+							var acc = critters[critterType].HEADBAND_ACCESSORIES[item.headband_accessory];
+							var accPath = (acc.IMG.split('.')[0]+'_30o.png');
+							var jacc = await Jimp.read(accPath);
+							jcrit.composite(jacc, acc.POSX, acc.POSY);
+						}
+						//adds critter to preview
+						jcrit.resize(Jimp.AUTO, categories.HEADBAND.PREVIEW.HEIGHT);
+						jbase.resize(categories.HEADBAND.PREVIEW.BASE.WIDTH, Jimp.AUTO);
+						jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, 20);
+						jimg.composite(jcrit, categories.HEADBAND.PREVIEW.LEFT-jcrit.bitmap.width/2, categories.HEADBAND.PREVIEW.TOP);
+						jcrit.flip(true, false);
+						jimg.composite(jcrit, categories.HEADBAND.PREVIEW.LEFT-jcrit.bitmap.width/2+categories.HEADBAND.PREVIEW.BASE.WIDTH-20, categories.HEADBAND.PREVIEW.TOP+5);
+						jimg.autocrop();
+						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
+
+						break;
+					}
+					case categories.HAIRCLIP.CATEGORY:{
+						//critter
+						var jbase, jcrit;
+						var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
+						var baseprom = Jimp.read(hairclips[item.hairclip_variation]).then(img => jbase = img);
+						var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
+						await Promise.all([jimgprom, baseprom, imgprom]);
+						if(item.hairclip_accessory >= 0 && item.hairclip_accessory < critters[critterType].HAIRCLIP_ACCESSORIES.length){
+							var acc = critters[critterType].HAIRCLIP_ACCESSORIES[item.hairclip_accessory];
+							var jacc = await Jimp.read(acc.IMG);
+							jcrit.composite(jacc, acc.POSX, acc.POSY);
+						}
+						//adds critter to preview
+						jcrit.resize(Jimp.AUTO, categories.HAIRCLIP.PREVIEW.HEIGHT);
+						jbase.resize(categories.HAIRCLIP.PREVIEW.BASE.WIDTH, Jimp.AUTO);
+						jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, 20);
+						jimg.composite(jcrit, categories.HAIRCLIP.PREVIEW.LEFT-jcrit.bitmap.width/2, categories.HAIRCLIP.PREVIEW.TOP);
+						jimg.autocrop();
+						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
+
+						break;
+					}
+					case categories.MAGNET.CATEGORY:{
+						//critter
+						var jimg, jbody, jhead, jarm;
+						var jimgprom = JimpCreate(300, 340).then(img => jimg = img);
+						var bodyprom = Jimp.read(critters[critterType].BODY).then(img => jbody = img);
+						var armprom = Jimp.read(critters[critterType].ARMS[item.variation]).then(img => jarm = img);
+						var headprom = Jimp.read(critters[critterType].HEAD).then(img => jhead = img);
+						await Promise.all([jimgprom, bodyprom, headprom, armprom]);
+						//makes critter
+						jimg.composite(jbody, baseOffset, baseOffset);
+						if(item.accessory >= 0 && item.accessory < critters[critterType].ACCESSORIES.length){
+							//load accessory
+							var acc = critters[critterType].ACCESSORIES[item.accessory];
+							var jacc = await Jimp.read(acc.IMG);
+							//if arm is behind accessory
+							if(!critters[critterType].ACCESSORIES[item.accessory].BEHIND_ARMS[item.variation]){
+								if(item.variation === 2) //this arm is above face
+									jimg.composite(jhead, baseOffset, baseOffset);
+								jimg.composite(jarm, baseOffset, baseOffset);
+								if(item.variation < 2) //this arm is below face
+									jimg.composite(jhead, baseOffset, baseOffset);
+								//accessory
+								jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+							}
+							else{
+								//arm above accessory
+								if(item.variation === 2){ //this arm is above face
+									jimg.composite(jhead, baseOffset, baseOffset);
+									jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+								}
+								jimg.composite(jarm, baseOffset, baseOffset);
+								if(item.variation < 2){ //this arm is below face
+									jimg.composite(jhead, baseOffset, baseOffset);
+									jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+								}
+							}
+						}
+						else{
+							//there are no accessories
+							if(item.variation === 2) //this arm is above face
+								jimg.composite(jhead, baseOffset, baseOffset);
+							jimg.composite(jarm, baseOffset, baseOffset);
+							if(item.variation < 2) //this arm is below face
+								jimg.composite(jhead, baseOffset, baseOffset);
+						}
+						jimg.autocrop();
+						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
+
+						break;
+					}
+					case categories.MINIPIN.CATEGORY:{
+						//critter
+						var jcrit;
+						var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
+						var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
+						await Promise.all([jimgprom, imgprom]);
+						if(item.hairclip_accessory >= 0 && item.hairclip_accessory < critters[critterType].HAIRCLIP_ACCESSORIES.length){
+							var acc = critters[critterType].HAIRCLIP_ACCESSORIES[item.hairclip_accessory];
+							var jacc = await Jimp.read(acc.IMG);
+							jcrit.composite(jacc, acc.POSX, acc.POSY);
+						}
+						//adds critter to preview
+						jcrit.resize(Jimp.AUTO, categories.MINIPIN.PREVIEW.HEIGHT);
+						jimg.composite(jcrit, jimg.bitmap.width/2-jcrit.bitmap.width/2, 20);
+						jimg.autocrop();
+						jimg.scaleToFit(bgBoxSize*0.8, bgBoxSize*0.8);
+
+						break;
+					}
 				}
 				//applies bg and converts to base64
 				var bg = await Jimp.read('img/bagbox.png');

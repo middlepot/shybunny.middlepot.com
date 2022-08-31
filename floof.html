@@ -415,6 +415,172 @@ async function updatePreview(){
 
                 break;
             }
+            case categories.HEADBAND.CATEGORY:{
+                //critter
+                var jimg, jbase, jcrit;
+                var headPath = (critters[critterType].HEAD.split('.')[0]+'_30o.png');
+                var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
+                var baseprom = Jimp.read(headbands[currentHeadbandVariation]).then(img => jbase = img);
+                var imgprom = Jimp.read(headPath).then(img => jcrit = img);
+                await Promise.all([jimgprom, baseprom, imgprom]);
+                if(currentHeadbandAccessory >= 0 && currentHeadbandAccessory < critters[critterType].HEADBAND_ACCESSORIES.length){
+                    var acc = critters[critterType].HEADBAND_ACCESSORIES[currentHeadbandAccessory];
+                    var accPath = (acc.IMG.split('.')[0]+'_30o.png');
+                    var jacc = await Jimp.read(accPath);
+                    jcrit.composite(jacc, acc.POSX, acc.POSY);
+                }
+                //adds critter to preview
+                jcrit.resize(Jimp.AUTO, categories.HEADBAND.PREVIEW.HEIGHT);
+                jbase.resize(categories.HEADBAND.PREVIEW.BASE.WIDTH, Jimp.AUTO);
+                jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, 20);
+                jimg.composite(jcrit, categories.HEADBAND.PREVIEW.LEFT-jcrit.bitmap.width/2, categories.HEADBAND.PREVIEW.TOP);
+                jcrit.flip(true, false);
+                jimg.composite(jcrit, categories.HEADBAND.PREVIEW.LEFT-jcrit.bitmap.width/2+categories.HEADBAND.PREVIEW.BASE.WIDTH-20, categories.HEADBAND.PREVIEW.TOP+5);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.HEADBAND, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.HEADBAND.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.HEADBAND.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.HEADBAND.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.HEADBAND.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.HEADBAND.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.HEADBAND.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
+            case categories.HAIRCLIP.CATEGORY:{
+                //critter
+                var jimg, jbase, jcrit;
+                var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
+                var baseprom = Jimp.read(hairclips[currentHairclipVariation]).then(img => jbase = img);
+                var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
+                await Promise.all([jimgprom, baseprom, imgprom]);
+                if(currentHairclipAccessory >= 0 && currentHairclipAccessory < critters[critterType].HAIRCLIP_ACCESSORIES.length){
+                    var acc = critters[critterType].HAIRCLIP_ACCESSORIES[currentHairclipAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    jcrit.composite(jacc, acc.POSX, acc.POSY);
+                }
+                //adds critter to preview
+                jcrit.resize(Jimp.AUTO, categories.HAIRCLIP.PREVIEW.HEIGHT);
+                jbase.resize(categories.HAIRCLIP.PREVIEW.BASE.WIDTH, Jimp.AUTO);
+                jimg.composite(jbase, jimg.bitmap.width/2-jbase.bitmap.width/2, 20);
+                jimg.composite(jcrit, categories.HAIRCLIP.PREVIEW.LEFT-jcrit.bitmap.width/2, categories.HAIRCLIP.PREVIEW.TOP);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.HAIRCLIP, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.HAIRCLIP.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.HAIRCLIP.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.HAIRCLIP.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.HAIRCLIP.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.HAIRCLIP.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.HAIRCLIP.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
+            case categories.MAGNET.CATEGORY:{
+                //critter
+                var jimg, jbody, jhead, jarm;
+                var jimgprom = JimpCreate(300, 340).then(img => jimg = img);
+                var bodyprom = Jimp.read(critters[critterType].BODY).then(img => jbody = img);
+                var armprom = Jimp.read(critters[critterType].ARMS[currentVariation]).then(img => jarm = img);
+                var headprom = Jimp.read(critters[critterType].HEAD).then(img => jhead = img);
+                await Promise.all([jimgprom, bodyprom, headprom, armprom]);
+                //makes critter
+                jimg.composite(jbody, baseOffset, baseOffset);
+                if(currentAccessory >= 0 && currentAccessory < critters[critterType].ACCESSORIES.length){
+                    //load accessory
+                    var acc = critters[critterType].ACCESSORIES[currentAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    //if arm is behind accessory
+                    if(!critters[critterType].ACCESSORIES[currentAccessory].BEHIND_ARMS[currentVariation]){
+                        if(currentVariation === 2) //this arm is above face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                        jimg.composite(jarm, baseOffset, baseOffset);
+                        if(currentVariation < 2) //this arm is below face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                        //accessory
+                        jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                    }
+                    else{
+                        //arm above accessory
+                        if(currentVariation === 2){ //this arm is above face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                            jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                        }
+                        jimg.composite(jarm, baseOffset, baseOffset);
+                        if(currentVariation < 2){ //this arm is below face
+                            jimg.composite(jhead, baseOffset, baseOffset);
+                            jimg.composite(jacc, baseOffset+acc.POSX, baseOffset+acc.POSY);
+                        }
+                    }
+                }
+                else{
+                    //there are no accessories
+                    if(currentVariation === 2) //this arm is above face
+                        jimg.composite(jhead, baseOffset, baseOffset);
+                    jimg.composite(jarm, baseOffset, baseOffset);
+                    if(currentVariation < 2) //this arm is below face
+                        jimg.composite(jhead, baseOffset, baseOffset);
+                }
+                jimg.resize(Jimp.AUTO, categories.MAGNET.PREVIEW.HEIGHT);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.MAGNET, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.MAGNET.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.MAGNET.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.MAGNET.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.MAGNET.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.MAGNET.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.MAGNET.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
+            case categories.MINIPIN.CATEGORY:{
+                //critter
+                var jimg, jcrit;
+                var jimgprom = JimpCreate(500, 500).then(img => jimg = img);
+                var imgprom = Jimp.read(critters[critterType].HEAD).then(img => jcrit = img);
+                await Promise.all([jimgprom, imgprom]);
+                if(currentHairclipAccessory >= 0 && currentHairclipAccessory < critters[critterType].HAIRCLIP_ACCESSORIES.length){
+                    var acc = critters[critterType].HAIRCLIP_ACCESSORIES[currentHairclipAccessory];
+                    var jacc = await Jimp.read(acc.IMG);
+                    jcrit.composite(jacc, acc.POSX, acc.POSY);
+                }
+                //adds critter to preview
+                jcrit.resize(Jimp.AUTO, categories.MINIPIN.PREVIEW.HEIGHT);
+                jimg.composite(jcrit, jimg.bitmap.width/2-jcrit.bitmap.width/2, 20);
+                jimg.autocrop();
+
+                //shows preview
+                adjustPreviewPosition(categories.MINIPIN, jimg);
+
+                //display buttons
+                var variEl = document.getElementById('variations');
+                variEl.style.display = categories.MINIPIN.PREVIEW.BUTTONS.VARIATIONS.DISPLAY;
+                variEl.style.top = categories.MINIPIN.PREVIEW.BUTTONS.VARIATIONS.POSY;
+                variEl.style.left = categories.MINIPIN.PREVIEW.BUTTONS.VARIATIONS.POSX;
+                var accEl = document.getElementById('accessories');
+                accEl.style.display = categories.MINIPIN.PREVIEW.BUTTONS.ACCESSORIES.DISPLAY;
+                accEl.style.top = categories.MINIPIN.PREVIEW.BUTTONS.ACCESSORIES.POSY;
+                accEl.style.left = categories.MINIPIN.PREVIEW.BUTTONS.ACCESSORIES.POSX;
+
+                break;
+            }
         }
         loadingSomething = false;
     }
@@ -435,12 +601,22 @@ function changeCritter(e){
 
 function nextVariation(){
     if(!loadingSomething){
-        if(currentCategory === categories.CHOKER.CATEGORY){
+        if(currentCategory === categories.CHOKER.CATEGORY || currentCategory === categories.EARRING.CATEGORY){
             currentChokerVariation += 1;
             if(currentChokerVariation >= chokers.length)
                 currentChokerVariation = 0;
         }
-        else if(currentCategory !== categories.EARRING.CATEGORY){
+        else if(currentCategory === categories.HEADBAND.CATEGORY){
+            currentHeadbandVariation += 1;
+            if(currentHeadbandVariation >= headbands.length)
+                currentHeadbandVariation = 0;
+        }
+        else if(currentCategory === categories.HAIRCLIP.CATEGORY || currentCategory === categories.MINIPIN.CATEGORY){
+            currentHairclipVariation += 1;
+            if(currentHairclipVariation >= hairclips.length)
+                currentHairclipVariation = 0;
+        }
+        else{
             currentVariation += 1;
             var critterType = getCritterType();
             if(currentVariation >= critters[critterType].ARMS.length)
@@ -458,6 +634,16 @@ function nextAccessory(){
             currentChokerAccessory += 1;
             if(currentChokerAccessory >= critters[critterType].CHOKER_ACCESSORIES.length)
                 currentChokerAccessory = -1;
+        }
+        else if(currentCategory === categories.HEADBAND.CATEGORY){
+            currentHeadbandAccessory += 1;
+            if(currentHeadbandAccessory >= critters[critterType].HEADBAND_ACCESSORIES.length)
+                currentHeadbandAccessory = -1;
+        }
+        else if(currentCategory === categories.HAIRCLIP.CATEGORY || currentCategory === categories.MINIPIN.CATEGORY){
+            currentHairclipAccessory += 1;
+            if(currentHairclipAccessory >= critters[critterType].HAIRCLIP_ACCESSORIES.length)
+                currentHairclipAccessory = -1;
         }
         else{
             currentAccessory += 1;
@@ -489,18 +675,32 @@ function changeCategory(e){
         var target = e.target || e.srcElement;
         var cat = target.getAttribute('category');
         if(currentCategory !== cat){
-            //changes accessory if going to choker or earring
-            if((cat === categories.CHOKER.CATEGORY && currentCategory !== categories.CHOKER.CATEGORY) ||
-            (cat === categories.EARRING.CATEGORY && currentCategory !== categories.EARRING.CATEGORY)){
+            //changes accessory if going to 'head only' item
+            var isHead = (
+                (cat === categories.CHOKER.CATEGORY && currentCategory !== categories.CHOKER.CATEGORY) ||
+                (cat === categories.EARRING.CATEGORY && currentCategory !== categories.EARRING.CATEGORY) ||
+                (cat === categories.HEADBAND.CATEGORY && currentCategory !== categories.HEADBAND.CATEGORY) ||
+                (cat === categories.HAIRCLIP.CATEGORY && currentCategory !== categories.HAIRCLIP.CATEGORY) ||
+                (cat === categories.MINIPIN.CATEGORY && currentCategory !== categories.MINIPIN.CATEGORY)
+            );
+
+            if(isHead){
                 var critterType = getCritterType();
                 var acc = critters[critterType].ACCESSORIES[currentAccessory];
                 if(acc){
                     acc = acc.IMG;
                     //goes to first matching color accessory
+                    let base;
+                    if(cat === categories.CHOKER.CATEGORY || cat === categories.EARRING.CATEGORY)
+                        base = critters[critterType].CHOKER_ACCESSORIES;
+                    else if(cat === categories.HEADBAND.CATEGORY)
+                        base = critters[critterType].HEADBAND_ACCESSORIES;
+                    else if(cat === categories.HAIRCLIP.CATEGORY || cat === categories.MINIPIN.CATEGORY)
+                        base = critters[critterType].HAIRCLIP_ACCESSORIES;
+
                     if(acc.includes('_w')){
-                        var chokers = critters[critterType].CHOKER_ACCESSORIES;
-                        for(var i = 0; i < chokers.length; ++i){
-                            var current = critters[critterType].CHOKER_ACCESSORIES[i].IMG;
+                        for(var i = 0; i < base.length; ++i){
+                            var current = base[i].IMG;
                             if(current.includes('_w')){
                                 currentChokerAccessory = i;
                                 break;
@@ -508,9 +708,8 @@ function changeCategory(e){
                         }
                     }
                     else if(acc.includes('_p')){
-                        var chokers = critters[critterType].CHOKER_ACCESSORIES;
-                        for(var i = 0; i < chokers.length; ++i){
-                            var current = critters[critterType].CHOKER_ACCESSORIES[i].IMG;
+                        for(var i = 0; i < base.length; ++i){
+                            var current = base[i].IMG;
                             if(current.includes('_p')){
                                 currentChokerAccessory = i;
                                 break;
@@ -536,6 +735,10 @@ function resetCritter(){
     currentCategory = '';
     currentChokerVariation = 0;
     currentChokerAccessory = -1;
+    currentHeadbandVariation = 0;
+    currentHeadbandAccessory = -1;
+    currentHairclipVariation = 0;
+    currentHairclipAccessory = -1;
     loadingSomething = false;
     //removes preview
     var itemPreview = document.getElementById('item_preview');
@@ -588,8 +791,12 @@ function resetCritter(){
 				critter: currentCritter,
 				accessory: currentAccessory,
 				choker_accessory: currentChokerAccessory,
+                headband_accessory: currentHeadbandAccessory,
+                hairclip_accessory: currentHairclipAccessory,
 				variation: currentVariation,
 				choker_variation: currentChokerVariation,
+                headband_variation: currentHeadbandVariation,
+                hairclip_variation: currentHairclipVariation,
 				name: name,
 				traits: traits,
 				hobby: hobby
@@ -609,8 +816,8 @@ function resetCritter(){
 			if(amt <= 0)
 				amt = 'empty';
 			else if (amt<=1)
-        amt += ' item';
-      else
+                amt += ' item';
+            else
 				amt += ' items';
 			bag.innerHTML = '( '+amt+' )';
 		}
@@ -625,7 +832,7 @@ function resetCritter(){
 				cart_items = cart;
 			}
 		}
-    updateCart();
+        updateCart();
 	}
 </script>
 
@@ -636,33 +843,118 @@ overflow-y:hidden;
 overflow-x:hidden;
 z-index: 1;" src="./img/floofbase.png">
 
-<a><img id="charmbutton" style="position: absolute;
+<script>
+    function nextCategory(){
+        document.getElementById('arrownext').style.display = 'none';
+        document.getElementById('arrowprevious').style.display = 'block';
+
+        document.getElementById('charmbutton').style.display = 'none';
+        document.getElementById('pinbutton').style.display = 'none';
+        document.getElementById('chokerbutton').style.display = 'none';
+        document.getElementById('earringsbutton').style.display = 'none';
+
+        document.getElementById('headbandbutton').style.display = 'block';
+        document.getElementById('hairclipbutton').style.display = 'block';
+        document.getElementById('magnetbutton').style.display = 'block';
+        document.getElementById('minipinbutton').style.display = 'block';
+    }
+    function prevCategory(){
+        document.getElementById('arrownext').style.display = 'block';
+        document.getElementById('arrowprevious').style.display = 'none';
+
+        document.getElementById('charmbutton').style.display = 'block';
+        document.getElementById('pinbutton').style.display = 'block';
+        document.getElementById('chokerbutton').style.display = 'block';
+        document.getElementById('earringsbutton').style.display = 'block';
+
+        document.getElementById('headbandbutton').style.display = 'none';
+        document.getElementById('hairclipbutton').style.display = 'none';
+        document.getElementById('magnetbutton').style.display = 'none';
+        document.getElementById('minipinbutton').style.display = 'none';
+    }
+</script>
+
+<a><img id="arrownext" style="display:block;
+position: absolute;
+        left: 890px;
+        top: 380px;
+    overflow-y:hidden;
+    overflow-x:hidden;
+    z-index: 3;" src="./img/arrownext.png" onclick="nextCategory();"></a>
+
+    
+<a><img id="arrowprevious" style="display:none;
+    position: absolute;
+            left: 890px;
+            top: 380px;
+        overflow-y:hidden;
+        overflow-x:hidden;
+        z-index: 3;" src="./img/arrowprev.png" onclick="prevCategory();"></a>
+
+<a><img id="charmbutton" style="display:block;
+position: absolute;
 	left: 648px;
 	top: 337px;
 overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/charmbutton.png" category="charm" onclick="changeCategory();"></a>
 
-<a><img id="pinbutton" style="position: absolute;
+<a><img id="pinbutton" style="display:block;
+position: absolute;
 	left: 776px;
 	top: 336px;
 overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/pinbutton.png" category="pin" onclick="changeCategory();"></a>
 
-<a><img id="chokerbutton" style="position: absolute;
+<a><img id="chokerbutton" style="display:block;
+position: absolute;
 	left: 648px;
 	top: 394px;
 overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/chokerbutton.png" category="choker" onclick="changeCategory();"></a>
 
-<a><img id="earringsbutton" style="position: absolute;
+<a><img id="earringsbutton" style="display:block;
+position: absolute;
 	left: 775px;
 	top: 395px;
 overflow-y:hidden;
 overflow-x:hidden;
 z-index: 2;" src="./img/earringsbutton.png" category="earring" onclick="changeCategory();"></a>
+
+
+<a><img id="headbandbutton" style="display:none;
+    position: absolute;
+        left: 648px;
+        top: 337px;
+    overflow-y:hidden;
+    overflow-x:hidden;
+    z-index: 2;" src="./img/headbandbutton.png" category="headband" onclick="changeCategory();"></a>
+    
+    <a><img id="hairclipbutton" style="display:none;
+    position: absolute;
+        left: 776px;
+        top: 336px;
+    overflow-y:hidden;
+    overflow-x:hidden;
+    z-index: 2;" src="./img/hairclipbutton.png" category="hairclip" onclick="changeCategory();"></a>
+    
+    <a><img id="magnetbutton" style="display:none;
+    position: absolute;
+        left: 648px;
+        top: 394px;
+    overflow-y:hidden;
+    overflow-x:hidden;
+    z-index: 2;" src="./img/magnetbutton.png" category="magnet" onclick="changeCategory();"></a>
+    
+    <a><img id="minipinbutton" style="display:none;
+    position: absolute;
+        left: 775px;
+        top: 395px;
+    overflow-y:hidden;
+    overflow-x:hidden;
+    z-index: 2;" src="./img/minipinbutton.png" category="minipin" onclick="changeCategory();"></a>
 
 <a><img id="rulers" style="position: absolute;
 	left: 515px;
