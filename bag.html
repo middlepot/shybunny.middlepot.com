@@ -262,7 +262,7 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 		head.insertBefore(scrEl, head.firstChild);
 
 		//check if must show warning
-		var shippingRestricted = ['ZA', 'AU', 'NZ', 'PH'];
+		var shippingRestricted = ['ZA', 'AU', 'NZ', 'PH', 'ID'];
 		if(buyerCountry === 'unknown' || shippingRestricted.includes(buyerCountry)){
 			showShippingWarning();
 		}
