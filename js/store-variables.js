@@ -15,7 +15,15 @@ if(!$('#whiteoverlay').length){
     $(whiteoverlay).insertAfter('head');
 }
 
-var api_path = 'https://api.middlepot.com/v1';
+var environment = 'production';
+var api_path = 'http://localhost:3005/v1';
+var paypalKey = 'Aet2dryKVFoHrAaCgtDpJsADhYgbzWZX6AR8B-0ITrVl7FM0U_6u2-LnxqsBqU0wvnDOHgjgkNo7Pmz3';
+var mercadopagoKey = 'TEST-7d87dc06-5d2f-4d62-8534-622f2052f806';
+if(environment !== 'development'){
+    api_path = 'https://api.middlepot.com/v1';
+    paypalKey = 'AaJ_j9vf-Z4jI8C7WrbP81WAsXm7HaMGEtFjvostBsdRBze1xJv3DbSX7DasVPtYVar3urkgUhiX3_2Z';
+    mercadopagoKey = 'APP_USR-6039baf3-61e2-45ee-bc85-b6c9e0cba763';
+}
 var store_info = {};
 var critters = {};
 var categories = {};

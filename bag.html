@@ -252,7 +252,7 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 		gotUserLocation = true;
 	}
 	async function loadPaypalSdk(){
-		var base_url = 'https://www.paypal.com/sdk/js?client-id=AaJ_j9vf-Z4jI8C7WrbP81WAsXm7HaMGEtFjvostBsdRBze1xJv3DbSX7DasVPtYVar3urkgUhiX3_2Z&components=buttons,funding-eligibility';
+		var base_url = `https://www.paypal.com/sdk/js?client-id=${paypalKey}&components=buttons,funding-eligibility`;
 		var scrEl = document.createElement('script');
 		scrEl.src = base_url;
 		scrEl.onload = function(){
@@ -836,8 +836,10 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 	}
 
 	function clearCart(){
-		setCookie("cart_items", JSON.stringify([]));
-		deleteCookie("cart_items");
+		if(environment !== 'development'){
+			setCookie("cart_items", JSON.stringify([]));
+			deleteCookie("cart_items");
+		}
 	}
 
 	//load cart from cookies
@@ -978,7 +980,8 @@ z-index: 2;" src="./img/bagtotal.png">
 <img id="notebag" src="./img/notebag.png" style="position: absolute; z-index: 2; top: 565px; left: 685px;">
 
 <!-- Add the checkout buttons, set up the order and approve the order -->
-<div id="paypal-payment-methods">
+<img src="./img/filladdress.png" onclick="openAddressForm();" class="hoverable" id="paypal-filladdress" style="position: absolute; z-index: 4; top: 529px; left: 489px;">
+<div id="paypal-payment-methods" style="display: none;">
 	<img src="./img/checkoutback.png" style="position: absolute; z-index: 2; top: 525px; left: 485px;">
 	<img src="./img/checkoutpaypal.png" style="pointer-events: none; position: absolute; z-index: 4; top: 529px; left: 489px;">
 	<img src="./img/checkoutcredit.png" style="pointer-events: none; position: absolute; z-index: 4; top: 574px; left: 489px;">
@@ -991,6 +994,20 @@ z-index: 2;" src="./img/bagtotal.png">
 	<a><img src="./img/brazilcheckout.png" id="mercadopago-button" onclick="openAddressForm();" style="position: absolute; z-index: 4; top: 529px; left: 489px;"></a>
 </div>
 <script>
+	function setPaypalButtonsVisibility(visible){
+		if(visible){
+			document.getElementById('paypal-payment-methods').style.display = 'block';
+			document.getElementById('paypal-filladdress').style.display = 'none';
+		}
+		else{
+			document.getElementById('paypal-payment-methods').style.display = 'none';
+			document.getElementById('paypal-button-container').innerHTML = '';
+			document.getElementById('card-button-container').innerHTML = '';
+			document.getElementById('paypal-filladdress').style.display = 'block';
+		}
+	}
+	setPaypalButtonsVisibility(false);
+
 	var paypalButtons = [];
 	var buyerCardRestricted = false;
 	function loadPaypalButtons(){
@@ -1054,14 +1071,8 @@ z-index: 2;" src="./img/bagtotal.png">
 							}]
 						});
 					},
-					onClick: function(){
-						var buyerMailEl = document.getElementById('buyermail');
-						var buyerMail = buyerMailEl.value;
-						if(!validateEmail(buyerMail)){
-							//invalid email
-							buyerMailEl.value = '';
-							return false;
-						}
+					onCancel: function(){
+						setPaypalButtonsVisibility(false);
 					},
 					onApprove: function (data, actions) {
 						return actions.order.capture().then(async function (details) {
@@ -1075,7 +1086,16 @@ z-index: 2;" src="./img/bagtotal.png">
 								buyerMail: buyerMail,
 								coupon: usedCoupon,
 								affiliate: getQueryParam(affiliateParam),
-								items: cart_items
+								items: cart_items,
+								address: {
+									name: addressName,
+									addr1: addressAddr1,
+									addr2: addressAddr2,
+									city: addressCity,
+									state: addressState,
+									zip: addressZip,
+									country: addressCountry
+								}
 							});
 
 							//change page layout
@@ -1124,7 +1144,6 @@ z-index: 2;" src="./img/bagtotal.png">
 	var mercadopagostatus = getQueryParam('mercadopago_status');
 	function loadMercadopagoButtons(){
 		if(loadedMercadopagoSdk){
-			
 			//hide paypal containers and show mercadopago
 			document.getElementById('paypal-payment-methods').style.display = 'none';
 			document.getElementById('paypal-container').style.display = 'none';
@@ -1146,7 +1165,7 @@ z-index: 2;" src="./img/bagtotal.png">
 				document.getElementById('coupon-status').remove();
 			}
 
-			mercadopago = new MercadoPago('APP_USR-6039baf3-61e2-45ee-bc85-b6c9e0cba763', {
+			mercadopago = new MercadoPago(mercadopagoKey, {
 				locale: 'pt-BR'
 			});
 		}
@@ -1214,6 +1233,13 @@ z-index: 2;" src="./img/bagtotal.png">
 		hideLoadingOverlay();
 	}
 	
+	var addressName = '';
+	var addressAddr1 = '';
+	var addressAddr2 = '';
+	var addressCity = '';
+	var addressState = '';
+	var addressZip = '';
+	var addressCountry = '';
 	function openAddressForm(){
 		if(cartIsEmpty()){
 			return false;
@@ -1230,99 +1256,196 @@ z-index: 2;" src="./img/bagtotal.png">
 		style="position:fixed; display:flex; justify-content:center; align-items:center; width:100%;
 		height:100%; top: 0; left: 0; background:#fff; opacity:0.3; z-index:999997">`);
 		$(addressFormOverlay).insertAfter('head');
-		var addressFormFields = $.parseHTML(`
-		<div id="addressForm">
-			<img id="addressform" style="position: absolute; left: 500px; top: 190px; overflow-y:hidden; overflow-x:hidden; z-index: 999998;" src="./img/address-brazil.png">
-			
-			<input id="addressform-name" style="position: absolute; left: 540px; top: 242px;
-			overflow: hidden; z-index: 999999; width: 190px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
+		var addressFormFields = '';
+		if(loadedPaypalSdk){
+			addressFormFields = $.parseHTML(`
+			<div id="addressForm">
+				<img id="addressform" style="position: absolute; left: 500px; top: 190px; overflow-y:hidden; overflow-x:hidden; z-index: 999998;" src="./img/address.png">
+				
+				<input id="addressform-name" onblur="addressName = this.value;" style="position: absolute; left: 540px; top: 232px;
+				overflow: hidden; z-index: 999999; width: 190px; height:20px;
+				border: 0px; outline:none; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px;"></input>
 
-			<input id="addressform-street" style="position: absolute; left: 540px; top: 285px;
-			overflow: hidden; z-index: 999999; width: 190px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
+				<input id="addressform-addr1" onblur="addressAddr1 = this.value;" style="position: absolute; left: 540px; top: 275px;
+				overflow: hidden; z-index: 999999; width: 190px; height:20px;
+				border: 0px; outline:none; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px;"></input>
 
-			<input id="addressform-number" style="position: absolute; left: 540px; top: 330px;
-			overflow: hidden; z-index: 999999; width: 80px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
+				<input id="addressform-addr2" onblur="addressAddr2 = this.value;" style="position: absolute; left: 540px; top: 320px;
+				overflow: hidden; z-index: 999999; width: 190px; height:20px;
+				border: 0px; outline:none; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px;"></input>
 
-			<input id="addressform-compl" style="position: absolute; left: 645px; top: 330px;
-			overflow: hidden; z-index: 999999; width: 80px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
+				<input id="addressform-city" onblur="addressCity = this.value;" style="position: absolute; left: 540px; top: 365px;
+				overflow: hidden; z-index: 999999; width: 190px; height:20px;
+				border: 0px; outline:none; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px;"></input>
 
-			<input id="addressform-city" style="position: absolute; left: 540px; top: 375px;
-			overflow: hidden; z-index: 999999; width: 190px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
+				<input id="addressform-state" onblur="addressState = this.value;" style="position: absolute; left: 540px; top: 410px;
+				overflow: hidden; z-index: 999999; width: 95px; height:20px;
+				border: 0px; outline:none; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px;"></input>
 
-			<input id="addressform-state" style="position: absolute; left: 540px; top: 420px;
-			overflow: hidden; z-index: 999999; width: 95px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
+				<input id="addressform-zip" onblur="addressZip = this.value;" inputmode="numeric" pattern="\d*" style="position: absolute; left: 540px; top: 452px;
+				overflow: hidden; z-index: 999999; width: 95px; height:20px;
+				border: 0px; outline:none; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px;"></input>
 
-			<input id="addressform-cep" inputmode="numeric" pattern="\d*" style="position: absolute; left: 540px; top: 462px;
-			overflow: hidden; z-index: 999999; width: 95px; height:20px;
-			border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
-			font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
-			background: transparent; resize: none; padding:5px; outline:none;"></input>
+				<input id="addressform-country" onblur="addressCountry = this.value;" style="position: absolute; left: 540px; top: 495px;
+				overflow: hidden; z-index: 999999; width: 100px; height:20px;
+				border: 0px; outline:none; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px;"></input>
 
-			<a><img src="./img/bagdelete.png" style="z-index: 999999; position: absolute; left: 715px; top: 197px;" onclick="closeAddressForm();"></a>
-			<a><img src="./img/ok-address.png" style="z-index: 999999; position: absolute; left: 660px; top: 410px;" onclick="confirmAddressForm();"></a>
-		</div>`);
-		$('#everything').append(addressFormFields);
+				<a><img src="./img/bagdelete.png" style="z-index: 999999; position: absolute; left: 715px; top: 197px;" onclick="closeAddressForm();"></a>
+				<a><img src="./img/ok-address.png" style="z-index: 999999; position: absolute; left: 660px; top: 410px;" onclick="confirmAddressForm();"></a>
+			</div>`);
+
+			$('#everything').append(addressFormFields);
+
+			document.getElementById('addressform-name').value = addressName;
+			document.getElementById('addressform-addr1').value = addressAddr1;
+			document.getElementById('addressform-addr2').value = addressAddr2;
+			document.getElementById('addressform-city').value = addressCity;
+			document.getElementById('addressform-state').value = addressState;
+			document.getElementById('addressform-zip').value = addressZip;
+			document.getElementById('addressform-country').value = addressCountry;
+		}
+		else{
+			addressFormFields = $.parseHTML(`
+			<div id="addressForm">
+				<img id="addressform" style="position: absolute; left: 500px; top: 190px; overflow-y:hidden; overflow-x:hidden; z-index: 999998;" src="./img/address-brazil.png">
+				
+				<input id="addressform-name" style="position: absolute; left: 540px; top: 242px;
+				overflow: hidden; z-index: 999999; width: 190px; height:20px;
+				border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+				<input id="addressform-street" style="position: absolute; left: 540px; top: 285px;
+				overflow: hidden; z-index: 999999; width: 190px; height:20px;
+				border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+				<input id="addressform-number" style="position: absolute; left: 540px; top: 330px;
+				overflow: hidden; z-index: 999999; width: 80px; height:20px;
+				border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+				<input id="addressform-compl" style="position: absolute; left: 645px; top: 330px;
+				overflow: hidden; z-index: 999999; width: 80px; height:20px;
+				border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+				<input id="addressform-city" style="position: absolute; left: 540px; top: 375px;
+				overflow: hidden; z-index: 999999; width: 190px; height:20px;
+				border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+				<input id="addressform-state" style="position: absolute; left: 540px; top: 420px;
+				overflow: hidden; z-index: 999999; width: 95px; height:20px;
+				border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+				<input id="addressform-cep" inputmode="numeric" pattern="\d*" style="position: absolute; left: 540px; top: 462px;
+				overflow: hidden; z-index: 999999; width: 95px; height:20px;
+				border: 0px; cursor: url(./img/cursorwrite.png), progress; font-family: Calibri;
+				font-size: 11px; color:#998585; letter-spacing:1px; line-height:15px; font-weight:bold;
+				background: transparent; resize: none; padding:5px; outline:none;"></input>
+
+				<a><img src="./img/bagdelete.png" style="z-index: 999999; position: absolute; left: 715px; top: 197px;" onclick="closeAddressForm();"></a>
+				<a><img src="./img/ok-address.png" style="z-index: 999999; position: absolute; left: 660px; top: 410px;" onclick="confirmAddressForm();"></a>
+			</div>`);
+
+			$('#everything').append(addressFormFields);
+		}
 	}
 	function confirmAddressForm(){
-		var name = document.getElementById('addressform-name');
-		var street = document.getElementById('addressform-street');
-		var number = document.getElementById('addressform-number');
-		var city = document.getElementById('addressform-city');
-		var state = document.getElementById('addressform-state');
-		var cep = document.getElementById('addressform-cep');
-		if(!name.value){
-			name.placeholder = 'insira um nome';
-			return false;
+		if(loadedPaypalSdk){
+			var name = document.getElementById('addressform-name');
+			var addr1 = document.getElementById('addressform-addr1');
+			var city = document.getElementById('addressform-city');
+			var state = document.getElementById('addressform-state');
+			var zip = document.getElementById('addressform-zip');
+			if(!name.value){
+				name.placeholder = 'invalid name';
+				return false;
+			}
+			if(!addr1.value){
+				addr1.placeholder = 'invalid address';
+				return false;
+			}
+			if(!city.value){
+				city.placeholder = 'invalid city';
+				return false;
+			}
+			if(!state.value){
+				state.placeholder = 'invalid state/province';
+				return false;
+			}
+			if(!zip.value){
+				zip.value = '';
+				zip.placeholder = 'invalid zip code';
+				return false;
+			}
+			closeAddressForm();
+			setPaypalButtonsVisibility(true);
+			loadPaypalButtons();
 		}
-		if(!street.value){
-			street.placeholder = 'insira uma rua';
-			return false;
+		else{
+			var name = document.getElementById('addressform-name');
+			var street = document.getElementById('addressform-street');
+			var number = document.getElementById('addressform-number');
+			var city = document.getElementById('addressform-city');
+			var state = document.getElementById('addressform-state');
+			var cep = document.getElementById('addressform-cep');
+			if(!name.value){
+				name.placeholder = 'insira um nome';
+				return false;
+			}
+			if(!street.value){
+				street.placeholder = 'insira uma rua';
+				return false;
+			}
+			if(!validateInt(number.value)){
+				number.value = '';
+				number.placeholder = 'insira um número válido';
+				return false;
+			}
+			if(!city.value){
+				city.placeholder = 'insira uma cidade';
+				return false;
+			}
+			if(!state.value){
+				state.placeholder = 'insira um estado';
+				return false;
+			}
+			if(!validateCep(cep.value)){
+				cep.value = '';
+				cep.placeholder = 'insira um CEP válido';
+				return false;
+			}
+			openMercadopago();
 		}
-		if(!validateInt(number.value)){
-			number.value = '';
-			number.placeholder = 'insira um número válido';
-			return false;
-		}
-		if(!city.value){
-			city.placeholder = 'insira uma cidade';
-			return false;
-		}
-		if(!state.value){
-			state.placeholder = 'insira um estado';
-			return false;
-		}
-		if(!validateCep(cep.value)){
-			cep.value = '';
-			cep.placeholder = 'insira um CEP válido';
-			return false;
-		}
-		//all ok, call mercadopago
-		openMercadopago();
 	}
 	function closeAddressForm(){
 		$('#addressForm').remove();
 		$('#addressFormOverlay').remove();
 	}
 
-	loadPaypalButtons();
+	//loadPaypalButtons();
 	loadMercadopagoButtons();
 </script>
 
