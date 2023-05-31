@@ -136,6 +136,7 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 <script src="js/store-variables-1.0.js"></script>
 <script src="js/util.js"></script>
 <script>
+	//store is closed due to aids
 	var store_closed = true;
 
 	function openDigitalConfirmation(){
@@ -226,11 +227,12 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 		close.style.top = '200px';
 		close.style.left = '720px';
 		close.style.zIndex = '999992';
-		close.onclick = function(){
+		var close = $('<a href=#><img id="shippingWarningClose" src="./img/bagdelete.png" style="position: absolute; display: block; top: 200px; left: 720px; z-index:999992;"></img></a>')
+		close.on('click', function(){
 			$('#shippingWarningOverlay')[0].remove();
 			$('#shippingWarningMessage')[0].remove();
 			$('#shippingWarningClose')[0].remove();
-		}
+		});
 		$('#everything').append(close);
 	}
 
@@ -282,10 +284,6 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 	}
 
 	getBuyerLocation();
-	//store is closed due to aids
-	if(store_closed){
-		showShippingWarning();
-	}
 
 	//awaits user location to define which sdk to load
 	var awaitingUserLocation = setInterval(function(){
@@ -296,6 +294,10 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 			//not brazil, load paypal
 			else
 				loadPaypalSdk();
+
+			if(store_closed){
+				showShippingWarning();
+			}
 
 			clearInterval(awaitingUserLocation);
 		}
