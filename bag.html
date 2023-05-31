@@ -136,6 +136,8 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 <script src="js/store-variables-1.0.js"></script>
 <script src="js/util.js"></script>
 <script>
+	var store_closed = true;
+
 	function openDigitalConfirmation(){
 		var whiteoverlay = document.createElement('div');
 		whiteoverlay.id = 'digitalConfirmationOverlay';
@@ -264,7 +266,9 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 		//check if must show warning
 		var shippingRestricted = ['ZA', 'AU', 'NZ', 'PH', 'ID'];
 		if(buyerCountry === 'unknown' || shippingRestricted.includes(buyerCountry)){
-			showShippingWarning();
+			if(!store_closed){
+				showShippingWarning();
+			}
 		}
 	}
 	async function loadMercadopagoSdk(){
@@ -278,6 +282,10 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 	}
 
 	getBuyerLocation();
+	//store is closed due to aids
+	if(store_closed){
+		showShippingWarning();
+	}
 
 	//awaits user location to define which sdk to load
 	var awaitingUserLocation = setInterval(function(){
@@ -1040,6 +1048,10 @@ z-index: 2;" src="./img/bagtotal.png">
 						height: 40
 					},
 					createOrder: async function (data, actions) {
+						if(store_closed){
+							showShippingWarning();
+							return false;
+						}
 						var catcart = [];
 						cart_items.forEach(item =>{
 							catcart.push(item.category);
@@ -1175,6 +1187,11 @@ z-index: 2;" src="./img/bagtotal.png">
 		}
 	}
 	async function openMercadopago(){
+
+		if(store_closed){
+			showShippingWarning();
+			return false;
+		}
 		
 		showLoadingOverlay();
 
