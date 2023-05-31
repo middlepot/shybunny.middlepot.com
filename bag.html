@@ -1054,6 +1054,7 @@ z-index: 2;" src="./img/bagtotal.png">
 							showShippingWarning();
 							return false;
 						}
+
 						var catcart = [];
 						cart_items.forEach(item =>{
 							catcart.push(item.category);
@@ -1260,6 +1261,10 @@ z-index: 2;" src="./img/bagtotal.png">
 	var addressZip = '';
 	var addressCountry = '';
 	function openAddressForm(){
+		if(store_closed){
+			showShippingWarning();
+			return;
+		}
 		if(cartIsEmpty()){
 			return false;
 		}
