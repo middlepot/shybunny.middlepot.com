@@ -136,6 +136,9 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 <script src="js/store-variables-1.0.js"></script>
 <script src="js/util.js"></script>
 <script>
+	//store is closed due to aids
+	var store_closed = true;
+
 	function openDigitalConfirmation(){
 		var whiteoverlay = document.createElement('div');
 		whiteoverlay.id = 'digitalConfirmationOverlay';
@@ -224,11 +227,12 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 		close.style.top = '200px';
 		close.style.left = '720px';
 		close.style.zIndex = '999992';
-		close.onclick = function(){
+		var close = $('<a href=#><img id="shippingWarningClose" src="./img/bagdelete.png" style="position: absolute; display: block; top: 200px; left: 720px; z-index:999992;"></img></a>')
+		close.on('click', function(){
 			$('#shippingWarningOverlay')[0].remove();
 			$('#shippingWarningMessage')[0].remove();
 			$('#shippingWarningClose')[0].remove();
-		}
+		});
 		$('#everything').append(close);
 	}
 
@@ -264,7 +268,9 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 		//check if must show warning
 		var shippingRestricted = ['ZA', 'AU', 'NZ', 'PH', 'ID'];
 		if(buyerCountry === 'unknown' || shippingRestricted.includes(buyerCountry)){
-			showShippingWarning();
+			if(!store_closed){
+				showShippingWarning();
+			}
 		}
 	}
 	async function loadMercadopagoSdk(){
@@ -288,6 +294,10 @@ html{-webkit-text-size-adjust: 160%; text-size-adjust: 160%;}
 			//not brazil, load paypal
 			else
 				loadPaypalSdk();
+
+			if(store_closed){
+				showShippingWarning();
+			}
 
 			clearInterval(awaitingUserLocation);
 		}
@@ -1040,6 +1050,11 @@ z-index: 2;" src="./img/bagtotal.png">
 						height: 40
 					},
 					createOrder: async function (data, actions) {
+						if(store_closed){
+							showShippingWarning();
+							return false;
+						}
+
 						var catcart = [];
 						cart_items.forEach(item =>{
 							catcart.push(item.category);
@@ -1175,6 +1190,11 @@ z-index: 2;" src="./img/bagtotal.png">
 		}
 	}
 	async function openMercadopago(){
+
+		if(store_closed){
+			showShippingWarning();
+			return false;
+		}
 		
 		showLoadingOverlay();
 
@@ -1241,6 +1261,10 @@ z-index: 2;" src="./img/bagtotal.png">
 	var addressZip = '';
 	var addressCountry = '';
 	function openAddressForm(){
+		if(store_closed){
+			showShippingWarning();
+			return;
+		}
 		if(cartIsEmpty()){
 			return false;
 		}
