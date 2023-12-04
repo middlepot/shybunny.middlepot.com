@@ -210,14 +210,6 @@ z-index: 3;" src="./img/sendbutton.png" onclick="sendForm();"></a>
 			document.getElementById('invalid_email').style.display = 'block';
 			return;
 		}
-		var message = document.getElementById('message');
-		fetch(api_path+'/form', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({name: name.value, email: email.value, message: message.value, context: 'shy bunny'})
-		});
 		name.remove();
 		email.remove();
 		message.remove();
